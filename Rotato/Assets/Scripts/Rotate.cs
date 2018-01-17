@@ -5,15 +5,7 @@ using UnityEngine;
 public class Rotate : MonoBehaviour {
 
     public float speed = 15;
-    private int timesHitHorizontal = 0;
-    private int timesHitVertical = 0;
-    private int timesHitRolling = 0;
-
-    //0 = front
-    //1 = right
-    //2 = back
-    //3 = left
-    private int frontFace = 0;
+	private Quaternion targetOrientation = Quaternion.identity;
 
     // Use this for initialization
     void Start () {
@@ -23,43 +15,33 @@ public class Rotate : MonoBehaviour {
 	void Update () {
         if (Input.GetKeyDown(KeyCode.RightArrow))
         {
-            timesHitHorizontal--;
-            changeFace(true);
+			targetOrientation = Quaternion.Euler(0, -90, 0) * targetOrientation;
         }
-        if (Input.GetKeyDown(KeyCode.LeftArrow))
-        {
-            timesHitHorizontal++;
-            changeFace(false);
-        }
-
+		if( Input.GetKeyDown( KeyCode.LeftArrow ) ){
+			
+			targetOrientation = Quaternion.Euler(0, 90, 0) * targetOrientation;
+		}
         if (Input.GetKeyDown(KeyCode.UpArrow))
         {
-            timesHitVertical++;
+			targetOrientation = Quaternion.Euler(90, 0, 0) * targetOrientation;
         }
         if (Input.GetKeyDown(KeyCode.DownArrow))
         {
-            timesHitVertical--;
+			targetOrientation = Quaternion.Euler(-90, 0, 0) * targetOrientation;
         }
         if (Input.GetKeyDown(KeyCode.A))
         {
-            timesHitRolling++;
+			targetOrientation = Quaternion.Euler(0, 0, 90) * targetOrientation;
+            
         }
         if (Input.GetKeyDown(KeyCode.D))
         {
-            timesHitRolling--;
+			targetOrientation = Quaternion.Euler(0, 0, -90) * targetOrientation;
         }
 
-        this.transform.rotation = Quaternion.Lerp(this.transform.rotation, Quaternion.Euler(timesHitVertical * 90, timesHitHorizontal * 90, timesHitRolling*90), Time.deltaTime * speed);
-        
-    }
-
-    void changeFace(bool increase)
-    {
-        if (increase) { frontFace++; }
-        else { frontFace--; }
-
-        if(frontFace > 3) { frontFace -= 4; }
-        if(frontFace < 0) { frontFace += 4; }
-        print(frontFace);
+		this.transform.rotation = Quaternion.Lerp(
+			this.transform.rotation,
+			targetOrientation,
+			Mathf.Clamp01(Time.deltaTime*speed));
     }
 }
