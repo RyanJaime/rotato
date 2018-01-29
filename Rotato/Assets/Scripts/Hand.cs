@@ -40,6 +40,7 @@ public class Hand : MonoBehaviour {
 
 	void OnTriggerEnter(Collider collider)
 	{
+		print ("////////////////////////////////");
 		lastTouchingPos = OVRInput.GetLocalControllerPosition(Controller);
 
 		if (mHandState == State.EMPTY)
@@ -65,18 +66,55 @@ public class Hand : MonoBehaviour {
 			}
 		}
 
-		emptyTouchingPos = OVRInput.GetLocalControllerPosition(Controller);
-		Vector3 diff = lastTouchingPos - emptyTouchingPos;
-		print ("diff.x: " + diff.x);
-		if (Mathf.Sign (diff.x) == 1 && diff.x >= 0.07) { //if positive 
-			if (collider.attachedRigidbody.GetComponent<Rotate> () != null) {
-				collider.attachedRigidbody.GetComponent<Rotate> ().rotate (collider.attachedRigidbody, -1);
-			}
-		} else if (Mathf.Sign (diff.x) == -1 && diff.x <= -0.07) { // need to fine tune this
-			if (collider.attachedRigidbody.GetComponent<Rotate> () != null) {
-				collider.attachedRigidbody.GetComponent<Rotate> ().rotate (collider.attachedRigidbody, 1);
+		if (collider.gameObject.layer == LayerMask.NameToLayer ("rotatable")) {
+			emptyTouchingPos = OVRInput.GetLocalControllerPosition (Controller);
+			Vector3 diff = lastTouchingPos - emptyTouchingPos;
+			//print ("diff.y: " + diff.y);
+			if (Mathf.Sign (diff.x) == 1 && diff.x >= 0.05) { //if positive 
+				if (collider.attachedRigidbody.GetComponent<Rotate> () != null) {
+					//collider.gameObject.transform.parent.gameObject.GetComponent<Collider>().attachedRigidbody.GetComponent<Rotate> ().rotate (collider.gameObject.transform.parent.gameObject.GetComponent<Collider>().attachedRigidbody, -1);
+					collider.attachedRigidbody.GetComponent<Rotate> ().rotate (collider.attachedRigidbody, -1);
+					print ("000000000000000000000");
+				}
+			} else if (Mathf.Sign (diff.x) == -1 && diff.x <= -0.05) { // need to fine tune this
+				if (collider.attachedRigidbody.GetComponent<Rotate> () != null) {
+					//collider.gameObject.transform.parent.gameObject.GetComponent<Collider>().attachedRigidbody.GetComponent<Rotate> ().rotate (collider.gameObject.transform.parent.gameObject.GetComponent<Collider>().attachedRigidbody, 1);
+					collider.attachedRigidbody.GetComponent<Rotate> ().rotate (collider.attachedRigidbody, 1);
+					print ("1111111111111111111111111");
+				}
+			} else if (Mathf.Sign (diff.y) == 1 && diff.y >= 0.05) { // need to fine tune this
+				if (collider.attachedRigidbody.GetComponent<Rotate> () != null) {
+					//collider.gameObject.transform.parent.gameObject.GetComponent<Collider>().attachedRigidbody.GetComponent<Rotate> ().rotate (collider.gameObject.transform.parent.gameObject.GetComponent<Collider>().attachedRigidbody, -2);
+					collider.attachedRigidbody.GetComponent<Rotate> ().rotate (collider.attachedRigidbody, -2);
+					print ("222222222222222222222222222");
+				}
+			} else if (Mathf.Sign (diff.y) == -1 && diff.y <= -0.05) { // need to fine tune this
+				if (collider.attachedRigidbody.GetComponent<Rotate> () != null) {
+					//collider.gameObject.transform.parent.gameObject.GetComponent<Collider>().attachedRigidbody.GetComponent<Rotate> ().rotate (collider.gameObject.transform.parent.gameObject.GetComponent<Collider>().attachedRigidbody, 2);
+					collider.attachedRigidbody.GetComponent<Rotate> ().rotate (collider.attachedRigidbody, 2);
+					print ("3333333333333333333333333");
+				}
 			}
 		}
+			
+
+		/*else if ((OVRInput.GetLocalControllerVelocity (Controller).y) > 0.2f) {
+			//print ("here");
+			if (mHeldObject != null && mHeldObject.GetComponent<Rotate> () != null) { // check if the held object has the Rotate script
+				mHeldObject.GetComponent<Rotate> ().rotate (mHeldObject, 2);
+				//print ("00000000000000000000000000here");
+			}
+		}
+		else if ((OVRInput.GetLocalControllerVelocity (Controller).y) < -0.2f) {
+			//print ("there");
+			if (mHeldObject != null && mHeldObject.GetComponent<Rotate> () != null) { // check if the held object has the Rotate script
+				mHeldObject.GetComponent<Rotate> ().rotate (mHeldObject, -2);
+				//print ("11111111111111111111111111111111there");
+			}
+		}*/
+
+		// HEY DO THIS
+		// Fix rotations when positioned differently around the cube.
 
 	}
 
@@ -131,6 +169,7 @@ public class Hand : MonoBehaviour {
 			}
 			break;
 		case State.HOLDING:
+			/*
 			if (OVRInput.GetLocalControllerVelocity (Controller).x > 0.1 || OVRInput.GetLocalControllerVelocity (Controller).x < -0.1) {
 				print ("velocity on x: " + OVRInput.GetLocalControllerVelocity (Controller).x);
 			}
@@ -146,6 +185,8 @@ public class Hand : MonoBehaviour {
 				}
 			}
 
+
+
 			if (OVRInput.GetDown (OVRInput.Button.One, Controller)) { // I used GetDown instead of Get so it rotates properly instead of flippin out
 				print ("a button pressed while holding an object");
 				if (mHeldObject.GetComponent<Rotate> () != null) { // check if the held object has the Rotate script
@@ -160,6 +201,7 @@ public class Hand : MonoBehaviour {
 				throwObject();
 				mHandState = State.EMPTY;
 			}
+			*/
 			break;
 		}
 		previousVelocityx = currentVelocityx;

@@ -63,6 +63,27 @@ public class Rotate : MonoBehaviour {
 			targetOrientation = Quaternion.Euler(0, 90, 0) * targetOrientation;
 		}
 
+		else if (dir == 2)
+		{
+			targetOrientation = Quaternion.Euler(90, 0, 0) * targetOrientation;
+		}
+
+		else if (dir == -2)
+		{
+			targetOrientation = Quaternion.Euler(-90, 0 , 0) * targetOrientation;
+		}
+
+		else if (dir == 3)
+		{
+			targetOrientation = Quaternion.Euler(0, 0, -90) * targetOrientation;
+		}
+
+		else if (dir == -3)
+		{
+			targetOrientation = Quaternion.Euler(0, 0, 90) * targetOrientation;
+		}
+
+
 
 		obj.transform.rotation = Quaternion.Lerp(
 			obj.transform.rotation,
