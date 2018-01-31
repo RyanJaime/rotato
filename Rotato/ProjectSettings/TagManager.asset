@@ -5,6 +5,13 @@ TagManager:
   serializedVersion: 2
   tags:
   - note
+  - Back
+  - Left
+  - Right
+  - Top
+  - Bottom
+  - Front
+  - Rotatable
   layers:
   - Default
   - TransparentFX

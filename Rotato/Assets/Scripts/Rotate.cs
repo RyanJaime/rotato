@@ -75,12 +75,12 @@ public class Rotate : MonoBehaviour {
 
 		else if (dir == 3)
 		{
-			targetOrientation = Quaternion.Euler(0, 0, -90) * targetOrientation;
+			targetOrientation = Quaternion.Euler(0, 0, 90) * targetOrientation;
 		}
 
 		else if (dir == -3)
 		{
-			targetOrientation = Quaternion.Euler(0, 0, 90) * targetOrientation;
+			targetOrientation = Quaternion.Euler(0, 0, -90) * targetOrientation;
 		}
 
 

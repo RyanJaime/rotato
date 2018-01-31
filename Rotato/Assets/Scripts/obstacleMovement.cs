@@ -22,7 +22,7 @@ public class obstacleMovement : MonoBehaviour {
 	}
 	
 	// Update is called once per frame
-	void Update () {
+	void FixedUpdate () {
 		switch (moveState) {
 		case State.XMOVE:
 			transform.position = new Vector3 (transform.position.x + speed, transform.position.y, transform.position.z);
