@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Rotate : MonoBehaviour {
 
-    public float speed = 20; // was 15
+    public float speed = .000002000f; // was 15
 	private Quaternion targetOrientation = Quaternion.identity;
 
 

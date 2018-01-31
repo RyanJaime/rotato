@@ -28,6 +28,16 @@ public class Hand : MonoBehaviour {
 	private Vector3 lastTouchingPos;
 	private Vector3 emptyTouchingPos;
 
+	private GameObject RotatableCube;
+
+	private int face = 0;
+	//1 = Back
+	//2 = Left
+	//3 = Right
+	//4 = Top
+	//5 = Bottom
+	//6 = Front
+
 	private Quaternion lastRotation, currentRotation;
 
 	void Start ()
@@ -65,34 +75,36 @@ public class Hand : MonoBehaviour {
 				mHandState = State.EMPTY;
 			}
 		}
+		RotatableCube = GameObject.FindGameObjectWithTag("Rotatable");
 
-		if (collider.gameObject.layer == LayerMask.NameToLayer ("rotatable")) {
+
+		if (true) {
 			emptyTouchingPos = OVRInput.GetLocalControllerPosition (Controller);
 			Vector3 diff = lastTouchingPos - emptyTouchingPos;
 			//print ("diff.y: " + diff.y);
 			if (Mathf.Sign (diff.x) == 1 && diff.x >= 0.05) { //if positive 
-				if (collider.attachedRigidbody.GetComponent<Rotate> () != null) {
+				if (RotatableCube.GetComponent<Rotate> () != null) {
 					//collider.gameObject.transform.parent.gameObject.GetComponent<Collider>().attachedRigidbody.GetComponent<Rotate> ().rotate (collider.gameObject.transform.parent.gameObject.GetComponent<Collider>().attachedRigidbody, -1);
-					collider.attachedRigidbody.GetComponent<Rotate> ().rotate (collider.attachedRigidbody, -1);
-					//print ("000000000000000000000");
+					RotatableCube.GetComponent<Rotate> ().rotate (RotatableCube.GetComponent<Collider>().attachedRigidbody, -1);
+					print ("000000000000000000000");
 				}
 			} else if (Mathf.Sign (diff.x) == -1 && diff.x <= -0.05) { // need to fine tune this
-				if (collider.attachedRigidbody.GetComponent<Rotate> () != null) {
-					//collider.gameObject.transform.parent.gameObject.GetComponent<Collider>().attachedRigidbody.GetComponent<Rotate> ().rotate (collider.gameObject.transform.parent.gameObject.GetComponent<Collider>().attachedRigidbody, 1);
-					collider.attachedRigidbody.GetComponent<Rotate> ().rotate (collider.attachedRigidbody, 1);
-					//print ("1111111111111111111111111");
+				if (RotatableCube.GetComponent<Rotate> () != null) {
+					//collider.gameObject.transform.parent.gameObject.GetComponent<Collider>().attachedRigidbody.GetComponent<Rotate> ().rotate (collider.gameObject.transform.parent.gameObject.GetComponent<Collider>().attachedRigidbody, -1);
+					RotatableCube.GetComponent<Rotate> ().rotate (RotatableCube.GetComponent<Collider>().attachedRigidbody, 1);
+					print ("1111111111111111111111111");
 				}
 			} else if (Mathf.Sign (diff.y) == 1 && diff.y >= 0.05) { // need to fine tune this
-				if (collider.attachedRigidbody.GetComponent<Rotate> () != null) {
-					//collider.gameObject.transform.parent.gameObject.GetComponent<Collider>().attachedRigidbody.GetComponent<Rotate> ().rotate (collider.gameObject.transform.parent.gameObject.GetComponent<Collider>().attachedRigidbody, -2);
-					collider.attachedRigidbody.GetComponent<Rotate> ().rotate (collider.attachedRigidbody, -2);
-					//print ("222222222222222222222222222");
+				if (RotatableCube.GetComponent<Rotate> () != null) {
+					//collider.gameObject.transform.parent.gameObject.GetComponent<Collider>().attachedRigidbody.GetComponent<Rotate> ().rotate (collider.gameObject.transform.parent.gameObject.GetComponent<Collider>().attachedRigidbody, -1);
+					RotatableCube.GetComponent<Rotate> ().rotate (RotatableCube.GetComponent<Collider>().attachedRigidbody, -2);
+					print ("222222222222222222222222222");
 				}
 			} else if (Mathf.Sign (diff.y) == -1 && diff.y <= -0.05) { // need to fine tune this
-				if (collider.attachedRigidbody.GetComponent<Rotate> () != null) {
-					//collider.gameObject.transform.parent.gameObject.GetComponent<Collider>().attachedRigidbody.GetComponent<Rotate> ().rotate (collider.gameObject.transform.parent.gameObject.GetComponent<Collider>().attachedRigidbody, 2);
-					collider.attachedRigidbody.GetComponent<Rotate> ().rotate (collider.attachedRigidbody, 2);
-					//print ("3333333333333333333333333");
+				if (RotatableCube.GetComponent<Rotate> () != null) {
+					//collider.gameObject.transform.parent.gameObject.GetComponent<Collider>().attachedRigidbody.GetComponent<Rotate> ().rotate (collider.gameObject.transform.parent.gameObject.GetComponent<Collider>().attachedRigidbody, -1);
+					RotatableCube.GetComponent<Rotate> ().rotate (RotatableCube.GetComponent<Collider>().attachedRigidbody, 2);
+					print ("3333333333333333333333333");
 				}
 			}
 		}
@@ -110,26 +122,32 @@ public class Hand : MonoBehaviour {
 		if (Physics.Raycast(raydirection, out hit, 1000)) {
 			if (hit.collider.tag == "Back") {
 				print (" O WOW");
+				face = 1;
 					//hit.transform.gameObject.SendMessage("Activate", SendMessageOptions.DontRequireReceiver);
 				}
 			else if (hit.collider.tag == "Left") {
 				print (" O Left");
+				face = 2;
 				//hit.transform.gameObject.SendMessage("Activate", SendMessageOptions.DontRequireReceiver);
 			}
 			else if (hit.collider.tag == "right") {
 				print (" O Right");
+				face = 3;
 				//hit.transform.gameObject.SendMessage("Activate", SendMessageOptions.DontRequireReceiver);
 			}
 			else if (hit.collider.tag == "Top") {
 				print (" O Top");
+				face = 4;
 				//hit.transform.gameObject.SendMessage("Activate", SendMessageOptions.DontRequireReceiver);
 			}
 			else if (hit.collider.tag == "Bottom") {
 				print (" O Bottom");
+				face = 5;
 				//hit.transform.gameObject.SendMessage("Activate", SendMessageOptions.DontRequireReceiver);
 			}
 			else if (hit.collider.tag == "Front") {
 				print (" O Front");
+				face = 6;
 				//hit.transform.gameObject.SendMessage("Activate", SendMessageOptions.DontRequireReceiver);
 			}
 		}
