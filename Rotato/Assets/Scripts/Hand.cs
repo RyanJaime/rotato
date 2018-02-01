@@ -25,6 +25,8 @@ public class Hand : MonoBehaviour {
 	private float previousVelocityx = 0f;
 	private float currentVelocityx = 0f;
 
+    private float slapSensitivity = 0.05f;
+
 	private Vector3 lastTouchingPos;
 	private Vector3 emptyTouchingPos;
 
@@ -78,43 +80,68 @@ public class Hand : MonoBehaviour {
 		RotatableCube = GameObject.FindGameObjectWithTag("Rotatable");
 
 
-		if (true) {
+		if (collider.tag == "Back") { // check which face being collidered
 			emptyTouchingPos = OVRInput.GetLocalControllerPosition (Controller);
 			Vector3 diff = lastTouchingPos - emptyTouchingPos;
-			//print ("diff.y: " + diff.y);
-			if (Mathf.Sign (diff.x) == 1 && diff.x >= 0.05) { //if positive 
+			if (Mathf.Sign (diff.x) == 1 && diff.x >= slapSensitivity) {
 				if (RotatableCube.GetComponent<Rotate> () != null) {
-					//collider.gameObject.transform.parent.gameObject.GetComponent<Collider>().attachedRigidbody.GetComponent<Rotate> ().rotate (collider.gameObject.transform.parent.gameObject.GetComponent<Collider>().attachedRigidbody, -1);
 					RotatableCube.GetComponent<Rotate> ().rotate (RotatableCube.GetComponent<Collider>().attachedRigidbody, -1);
-					print ("000000000000000000000");
 				}
-			} else if (Mathf.Sign (diff.x) == -1 && diff.x <= -0.05) { // need to fine tune this
+			} else if (Mathf.Sign (diff.x) == -1 && diff.x <= -slapSensitivity) {
 				if (RotatableCube.GetComponent<Rotate> () != null) {
-					//collider.gameObject.transform.parent.gameObject.GetComponent<Collider>().attachedRigidbody.GetComponent<Rotate> ().rotate (collider.gameObject.transform.parent.gameObject.GetComponent<Collider>().attachedRigidbody, -1);
 					RotatableCube.GetComponent<Rotate> ().rotate (RotatableCube.GetComponent<Collider>().attachedRigidbody, 1);
-					print ("1111111111111111111111111");
 				}
-			} else if (Mathf.Sign (diff.y) == 1 && diff.y >= 0.05) { // need to fine tune this
+			} else if (Mathf.Sign (diff.y) == 1 && diff.y >= slapSensitivity) {
 				if (RotatableCube.GetComponent<Rotate> () != null) {
-					//collider.gameObject.transform.parent.gameObject.GetComponent<Collider>().attachedRigidbody.GetComponent<Rotate> ().rotate (collider.gameObject.transform.parent.gameObject.GetComponent<Collider>().attachedRigidbody, -1);
-					RotatableCube.GetComponent<Rotate> ().rotate (RotatableCube.GetComponent<Collider>().attachedRigidbody, -2);
-					print ("222222222222222222222222222");
-				}
-			} else if (Mathf.Sign (diff.y) == -1 && diff.y <= -0.05) { // need to fine tune this
+                    RotatableCube.GetComponent<Rotate>().rotate(RotatableCube.GetComponent<Collider>().attachedRigidbody, -2);
+                }
+			} else if (Mathf.Sign (diff.y) == -1 && diff.y <= -slapSensitivity) {
 				if (RotatableCube.GetComponent<Rotate> () != null) {
-					//collider.gameObject.transform.parent.gameObject.GetComponent<Collider>().attachedRigidbody.GetComponent<Rotate> ().rotate (collider.gameObject.transform.parent.gameObject.GetComponent<Collider>().attachedRigidbody, -1);
 					RotatableCube.GetComponent<Rotate> ().rotate (RotatableCube.GetComponent<Collider>().attachedRigidbody, 2);
-					print ("3333333333333333333333333");
 				}
 			}
 		}
+        else if (collider.tag == "Left")
+        { // check which face being collidered
+            emptyTouchingPos = OVRInput.GetLocalControllerPosition(Controller);
+            Vector3 diff = lastTouchingPos - emptyTouchingPos;
+            if (Mathf.Sign(diff.x) == 1 && diff.x >= slapSensitivity)
+            {
+                if (RotatableCube.GetComponent<Rotate>() != null)
+                {
+                    RotatableCube.GetComponent<Rotate>().rotate(RotatableCube.GetComponent<Collider>().attachedRigidbody, -1);
+                }
+            }
+            else if (Mathf.Sign(diff.x) == -1 && diff.x <= -slapSensitivity)
+            {
+                if (RotatableCube.GetComponent<Rotate>() != null)
+                {
+                    RotatableCube.GetComponent<Rotate>().rotate(RotatableCube.GetComponent<Collider>().attachedRigidbody, 1);
+                }
+            }
+            else if (Mathf.Sign(diff.y) == 1 && diff.y >= slapSensitivity)
+            {
+                if (RotatableCube.GetComponent<Rotate>() != null)
+                {
+                    RotatableCube.GetComponent<Rotate>().rotate(RotatableCube.GetComponent<Collider>().attachedRigidbody, -2);
+                }
+            }
+            else if (Mathf.Sign(diff.y) == -1 && diff.y <= -slapSensitivity)
+            {
+                if (RotatableCube.GetComponent<Rotate>() != null)
+                {
+                    RotatableCube.GetComponent<Rotate>().rotate(RotatableCube.GetComponent<Collider>().attachedRigidbody, 2);
+                }
+            }
+        }
 
-		// HEY DO THIS
-		// Fix rotations when positioned differently around the cube.
+        // HEY DO THIS
+        // Fix rotations when positioned differently around the cube.
 
-	}
+    }
 
 	void Update () {
+        /*
 		Ray raydirection = new Ray(transform.position, transform.forward);
 		Debug.DrawRay (transform.position, transform.forward, Color.black, 1);
 		RaycastHit hit;
@@ -151,7 +178,7 @@ public class Hand : MonoBehaviour {
 				//hit.transform.gameObject.SendMessage("Activate", SendMessageOptions.DontRequireReceiver);
 			}
 		}
-
+        */
 
 		if (mHandState == State.TOUCHING) {
 		}
