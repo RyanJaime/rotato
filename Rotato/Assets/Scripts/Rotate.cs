@@ -5,10 +5,10 @@ using UnityEngine;
 public class Rotate : MonoBehaviour {
 
     public float speed = .000002000f; // was 15
-	private Quaternion targetOrientation = Quaternion.identity;
-
-
 	public OVRInput.Controller Controller = OVRInput.Controller.LTouch;
+	public bool moving = false;
+
+	private Quaternion targetOrientation = Quaternion.identity;
 
     // Use this for initialization
     void Start () {
@@ -16,37 +16,31 @@ public class Rotate : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if (Input.GetKeyDown(KeyCode.RightArrow) || OVRInput.Get(OVRInput.Button.One, Controller))
-        {
-			//print ("rotateigngn!");
+		moving = false;
+
+		if (Input.GetKeyDown(KeyCode.RightArrow) || OVRInput.Get(OVRInput.Button.One, Controller)) {
 			targetOrientation = Quaternion.Euler(0, -90, 0) * targetOrientation;
-        }
-		if( Input.GetKeyDown( KeyCode.LeftArrow ) ){
-			
+        } else if(Input.GetKeyDown(KeyCode.LeftArrow)) {
 			targetOrientation = Quaternion.Euler(0, 90, 0) * targetOrientation;
-		}
-        if (Input.GetKeyDown(KeyCode.UpArrow))
-        {
+		} else if (Input.GetKeyDown(KeyCode.UpArrow)) {
 			targetOrientation = Quaternion.Euler(90, 0, 0) * targetOrientation;
-        }
-        if (Input.GetKeyDown(KeyCode.DownArrow))
-        {
+        } else if (Input.GetKeyDown(KeyCode.DownArrow)) {
 			targetOrientation = Quaternion.Euler(-90, 0, 0) * targetOrientation;
-        }
-        if (Input.GetKeyDown(KeyCode.A))
-        {
+        } else if (Input.GetKeyDown(KeyCode.A)) {
 			targetOrientation = Quaternion.Euler(0, 0, 90) * targetOrientation;
-            
-        }
-        if (Input.GetKeyDown(KeyCode.D))
-        {
+        } else if (Input.GetKeyDown(KeyCode.D)) {
 			targetOrientation = Quaternion.Euler(0, 0, -90) * targetOrientation;
         }
 
-		this.transform.rotation = Quaternion.Lerp(
-			this.transform.rotation,
-			targetOrientation,
-			Mathf.Clamp01(Time.deltaTime*speed));
+		if (this.transform.rotation != targetOrientation) {
+			this.transform.rotation = Quaternion.Lerp (
+				this.transform.rotation,
+				targetOrientation,
+				Mathf.Clamp01 (Time.deltaTime * speed)
+			);
+			moving = true;
+		}
+
     }
 
 
@@ -54,7 +48,6 @@ public class Rotate : MonoBehaviour {
 	{
 		if (dir == 1)
 		{
-			//print ("rotateigngn!");
 			targetOrientation = Quaternion.Euler(0, -90, 0) * targetOrientation;
 		}
 
@@ -82,14 +75,14 @@ public class Rotate : MonoBehaviour {
 		{
 			targetOrientation = Quaternion.Euler(0, 0, -90) * targetOrientation;
 		}
-
-
-
+			
+		/*
 		obj.transform.rotation = Quaternion.Lerp(
 			obj.transform.rotation,
 			targetOrientation,
 			Mathf.Clamp01(Time.deltaTime*speed)
 		);
+		*/
 
 	}
 

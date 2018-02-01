@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Hand : MonoBehaviour {
 
@@ -31,6 +32,10 @@ public class Hand : MonoBehaviour {
 	private Vector3 emptyTouchingPos;
 
 	private GameObject RotatableCube;
+	private Rotate CubeScript;
+	private Collider CubeCollider;
+
+	public Text helpfulText;
 
 	private int face = 0;
 	//1 = Back
@@ -44,10 +49,12 @@ public class Hand : MonoBehaviour {
 
 	void Start ()
 	{
-		if (AttachPoint == null)
-		{
+		if (AttachPoint == null) {
 			AttachPoint = GetComponent<Rigidbody>();
 		}
+		RotatableCube = GameObject.FindGameObjectWithTag("Rotatable");
+		CubeScript = RotatableCube.GetComponent<Rotate> ();
+		CubeCollider = RotatableCube.GetComponent<Collider> ();
 	}
 
 	void OnTriggerEnter(Collider collider)
@@ -55,88 +62,56 @@ public class Hand : MonoBehaviour {
 		//print ("////////////////////////////////");
 		lastTouchingPos = OVRInput.GetLocalControllerPosition(Controller);
 
-		if (mHandState == State.EMPTY)
-		{
-			GameObject temp = collider.gameObject;
-
-			if (temp != null && temp.layer == LayerMask.NameToLayer("grabbable") && temp.GetComponent<Rigidbody>() != null)
-			{
-				mHeldObject = temp.GetComponent<Rigidbody>();
-				mHandState = State.TOUCHING;
-			}
+		if (collider.tag == "Back") { // check which face being collidered
+			helpfulText.text = "Back";
+		} else if (collider.tag == "Left") { // check which face being collidered
+			helpfulText.text = "Left";
+		}  else if (collider.tag == "Right") { // check which face being collidered
+			helpfulText.text = "Right";
+		}	else if (collider.tag == "Front") { // check which face being collidered
+			helpfulText.text = "Front";
+		}	else if (collider.tag == "Front") { // check which face being collidered
+			helpfulText.text = "Front";
+		}	else if (collider.tag == "Bottom") { // check which face being collidered
+			helpfulText.text = "Bottom";
 		}
 	}
 
 	void OnTriggerExit(Collider collider)
 	{
-		if (mHandState != State.HOLDING)
-		{
-			if (collider.gameObject.layer == LayerMask.NameToLayer("grabbable"))
-			{
-				mHeldObject = null;
-				mHandState = State.EMPTY;
+		// RotatableCube = GameObject.FindGameObjectWithTag("Rotatable");
+		emptyTouchingPos = OVRInput.GetLocalControllerPosition (Controller);
+		Vector3 diff = lastTouchingPos - emptyTouchingPos;
+		float directionOne = 0f, directionTwo = 0f;
+		int axisOne = 0, axisTwo = 0;
+		if (collider.tag == "Front") {
+			directionOne = diff.x; 	directionTwo = diff.y;
+			axisOne = -1; 			axisTwo = -2;
+		} else if (collider.tag == "Back") {
+			directionOne = diff.x; 	directionTwo = diff.y;
+			axisOne = 1; 			axisTwo = 2;
+		} else if (collider.tag == "Left") {
+			directionOne = diff.z; 	directionTwo = diff.y;
+			axisOne = 1; 			axisTwo = 3;
+		} else if (collider.tag == "Right") {
+			directionOne = diff.z;	directionTwo = diff.y;
+			axisOne = -1;			axisTwo = -3;
+		} else if (collider.tag == "Top") {
+			directionOne = diff.x;	directionTwo = diff.z;
+			axisOne = 3;			axisTwo = -2;
+		} else if (collider.tag == "Bottom"){
+			directionOne = diff.x;	directionTwo = diff.z;
+			axisOne = -3;			axisTwo = 2;
+		}
+
+		if (!CubeScript.moving) {
+			if (CubeScript != null) {
+				if 		(Mathf.Sign (directionOne) == 1 && directionOne >= slapSensitivity) 	CubeScript.rotate (CubeCollider.attachedRigidbody, axisOne);
+				else if (Mathf.Sign (directionOne) == -1 && directionOne <= -slapSensitivity) 	CubeScript.rotate (CubeCollider.attachedRigidbody, -axisOne);
+				else if (Mathf.Sign (directionTwo) == 1 && directionTwo >= slapSensitivity) 	CubeScript.rotate (CubeCollider.attachedRigidbody, axisTwo);
+				else if (Mathf.Sign (directionTwo) == -1 && directionTwo <= -slapSensitivity) 	CubeScript.rotate (CubeCollider.attachedRigidbody, -axisTwo);
 			}
 		}
-		RotatableCube = GameObject.FindGameObjectWithTag("Rotatable");
-
-
-		if (collider.tag == "Back") { // check which face being collidered
-			emptyTouchingPos = OVRInput.GetLocalControllerPosition (Controller);
-			Vector3 diff = lastTouchingPos - emptyTouchingPos;
-			if (Mathf.Sign (diff.x) == 1 && diff.x >= slapSensitivity) {
-				if (RotatableCube.GetComponent<Rotate> () != null) {
-					RotatableCube.GetComponent<Rotate> ().rotate (RotatableCube.GetComponent<Collider>().attachedRigidbody, -1);
-				}
-			} else if (Mathf.Sign (diff.x) == -1 && diff.x <= -slapSensitivity) {
-				if (RotatableCube.GetComponent<Rotate> () != null) {
-					RotatableCube.GetComponent<Rotate> ().rotate (RotatableCube.GetComponent<Collider>().attachedRigidbody, 1);
-				}
-			} else if (Mathf.Sign (diff.y) == 1 && diff.y >= slapSensitivity) {
-				if (RotatableCube.GetComponent<Rotate> () != null) {
-                    RotatableCube.GetComponent<Rotate>().rotate(RotatableCube.GetComponent<Collider>().attachedRigidbody, -2);
-                }
-			} else if (Mathf.Sign (diff.y) == -1 && diff.y <= -slapSensitivity) {
-				if (RotatableCube.GetComponent<Rotate> () != null) {
-					RotatableCube.GetComponent<Rotate> ().rotate (RotatableCube.GetComponent<Collider>().attachedRigidbody, 2);
-				}
-			}
-		}
-        else if (collider.tag == "Left")
-        { // check which face being collidered
-            emptyTouchingPos = OVRInput.GetLocalControllerPosition(Controller);
-            Vector3 diff = lastTouchingPos - emptyTouchingPos;
-            if (Mathf.Sign(diff.x) == 1 && diff.x >= slapSensitivity)
-            {
-                if (RotatableCube.GetComponent<Rotate>() != null)
-                {
-                    RotatableCube.GetComponent<Rotate>().rotate(RotatableCube.GetComponent<Collider>().attachedRigidbody, -1);
-                }
-            }
-            else if (Mathf.Sign(diff.x) == -1 && diff.x <= -slapSensitivity)
-            {
-                if (RotatableCube.GetComponent<Rotate>() != null)
-                {
-                    RotatableCube.GetComponent<Rotate>().rotate(RotatableCube.GetComponent<Collider>().attachedRigidbody, 1);
-                }
-            }
-            else if (Mathf.Sign(diff.y) == 1 && diff.y >= slapSensitivity)
-            {
-                if (RotatableCube.GetComponent<Rotate>() != null)
-                {
-                    RotatableCube.GetComponent<Rotate>().rotate(RotatableCube.GetComponent<Collider>().attachedRigidbody, -2);
-                }
-            }
-            else if (Mathf.Sign(diff.y) == -1 && diff.y <= -slapSensitivity)
-            {
-                if (RotatableCube.GetComponent<Rotate>() != null)
-                {
-                    RotatableCube.GetComponent<Rotate>().rotate(RotatableCube.GetComponent<Collider>().attachedRigidbody, 2);
-                }
-            }
-        }
-
-        // HEY DO THIS
-        // Fix rotations when positioned differently around the cube.
 
     }
 
@@ -180,8 +155,6 @@ public class Hand : MonoBehaviour {
 		}
         */
 
-		if (mHandState == State.TOUCHING) {
-		}
 
 
 		timeSinceLastCall += Time.deltaTime;
