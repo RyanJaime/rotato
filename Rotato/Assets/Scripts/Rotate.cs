@@ -4,14 +4,19 @@ using UnityEngine;
 
 public class Rotate : MonoBehaviour {
 
-    public float speed = .000002000f; // was 15
+    public float speed = 1f; // was 15
 	public OVRInput.Controller Controller = OVRInput.Controller.LTouch;
 	public bool moving = false;
 
 	private Quaternion targetOrientation = Quaternion.identity;
+	private Quaternion startPos;
+	private Quaternion endPos;
+	private bool isLerping;
+	private float timeStartedLerping;
 
     // Use this for initialization
     void Start () {
+		startPos = transform.rotation;
     }
 	
 	// Update is called once per frame
@@ -32,50 +37,78 @@ public class Rotate : MonoBehaviour {
 			targetOrientation = Quaternion.Euler(0, 0, -90) * targetOrientation;
         }
 
+		/*
 		if (this.transform.rotation != targetOrientation) {
 			this.transform.rotation = Quaternion.Lerp (
-				this.transform.rotation,
+				startPos,
 				targetOrientation,
-				Mathf.Clamp01 (Time.deltaTime * speed)
+				Time.deltaTime * speed
+				//Mathf.Clamp01 (Time.deltaTime * speed)
 			);
 			moving = true;
 		}
-
+		*/
     }
 
+	public void FixedUpdate(){
+		if (isLerping) {
+			float timeSinceStarted = Time.time - timeStartedLerping;
+			float percentageComplete = timeSinceStarted / 0.1f;
+			print ("PERC%: " + percentageComplete);
+			this.transform.rotation = Quaternion.Lerp (
+				startPos,
+				endPos,
+				percentageComplete
+				/*Mathf.Clamp01 (Time.deltaTime * speed)*/
+			);
+			if (percentageComplete >= 1.0f) {
+				isLerping = false;
+				startPos = transform.rotation;
+			}
+		}
+	}
+
+	public void startLerping(){
+		isLerping = true;
+		timeStartedLerping = Time.time;
+		startPos = this.transform.rotation;
+		endPos = targetOrientation;
+	}
 
 	public void rotate(Rigidbody obj, int dir) // takes a Rigidbody gameObject and a number which determines which direction it will rotate.
 	{
 		if (dir == 1)
 		{
-			targetOrientation = Quaternion.Euler(0, -90, 0) * targetOrientation;
+			targetOrientation = Quaternion.Euler (0, -90, 0) * startPos;//targetOrientation;
 		}
 
 		else if (dir == -1)
 		{
-			targetOrientation = Quaternion.Euler(0, 90, 0) * targetOrientation;
+			targetOrientation = Quaternion.Euler(0, 90, 0) * startPos;//targetOrientation;
 		}
 
 		else if (dir == 2)
 		{
-			targetOrientation = Quaternion.Euler(90, 0, 0) * targetOrientation;
+			targetOrientation = Quaternion.Euler(90, 0, 0) * startPos;//targetOrientation;
 		}
 
 		else if (dir == -2)
 		{
-			targetOrientation = Quaternion.Euler(-90, 0 , 0) * targetOrientation;
+			targetOrientation = Quaternion.Euler(-90, 0 , 0) * startPos;//targetOrientation;
 		}
 
 		else if (dir == 3)
 		{
-			targetOrientation = Quaternion.Euler(0, 0, 90) * targetOrientation;
+			targetOrientation = Quaternion.Euler(0, 0, 90) * startPos;//targetOrientation;
 		}
 
 		else if (dir == -3)
 		{
-			targetOrientation = Quaternion.Euler(0, 0, -90) * targetOrientation;
+			targetOrientation = Quaternion.Euler(0, 0, -90) * startPos;//targetOrientation;
 		}
-			
+		if (!isLerping) {
+			startLerping ();
+		}
 		/*
 		obj.transform.rotation = Quaternion.Lerp(
 			obj.transform.rotation,
@@ -83,7 +116,5 @@ public class Rotate : MonoBehaviour {
 			Mathf.Clamp01(Time.deltaTime*speed)
 		);
 		*/
-
 	}
-
 }
