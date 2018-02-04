@@ -12,6 +12,8 @@ TagManager:
   - Bottom
   - Front
   - Rotatable
+  - Cube
+  - Hand
   layers:
   - Default
   - TransparentFX

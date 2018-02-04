@@ -5,6 +5,7 @@ using UnityEngine;
 public class obstacleMovement : MonoBehaviour {
 
 	public float speed = 4.0f;
+	public bool colliding = false;
 	public enum State
 	{
 		XMOVE,

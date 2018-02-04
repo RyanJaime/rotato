@@ -54,7 +54,7 @@ public class Rotate : MonoBehaviour {
 		if (isLerping) {
 			float timeSinceStarted = Time.time - timeStartedLerping;
 			float percentageComplete = timeSinceStarted / 0.1f;
-			print ("PERC%: " + percentageComplete);
+			//print ("PERC%: " + percentageComplete);
 			this.transform.rotation = Quaternion.Lerp (
 				startPos,
 				endPos,

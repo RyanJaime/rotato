@@ -37,15 +37,19 @@ public class Hand : MonoBehaviour {
 
 	public Text helpfulText;
 
-	private int face = 0;
-	//1 = Back
-	//2 = Left
-	//3 = Right
-	//4 = Top
-	//5 = Bottom
-	//6 = Front
+	public bool isPunching = false;
+	public bool isFist = false;
+
+	public GameObject noteEatingFace;
+	public bool isFaceEatingNote = false;
 
 	private Quaternion lastRotation, currentRotation;
+
+
+	OVRHapticsClip lHapticsClip;
+	OVRHapticsClip rHapticsClip;
+	public AudioClip lVibeClip;
+	public AudioClip rVibeClip;
 
 	void Start ()
 	{
@@ -55,6 +59,9 @@ public class Hand : MonoBehaviour {
 		RotatableCube = GameObject.FindGameObjectWithTag("Rotatable");
 		CubeScript = RotatableCube.GetComponent<Rotate> ();
 		CubeCollider = RotatableCube.GetComponent<Collider> ();
+
+		lHapticsClip = new OVRHapticsClip (lVibeClip);
+		rHapticsClip = new OVRHapticsClip (rVibeClip);
 	}
 
 	void OnTriggerEnter(Collider collider)
@@ -62,7 +69,7 @@ public class Hand : MonoBehaviour {
 		//print ("////////////////////////////////");
 		lastTouchingPos = OVRInput.GetLocalControllerPosition(Controller);
 
-		if (collider.tag == "Back") { // check which face being collidered
+		/*if (collider.tag == "Back") { // check which face being collidered
 			helpfulText.text = "Back";
 		} else if (collider.tag == "Left") { // check which face being collidered
 			helpfulText.text = "Left";
@@ -74,11 +81,27 @@ public class Hand : MonoBehaviour {
 			helpfulText.text = "Front";
 		}	else if (collider.tag == "Bottom") { // check which face being collidered
 			helpfulText.text = "Bottom";
+		}*/
+		noteEatingFace = GameObject.FindGameObjectWithTag ("Right");
+		isFaceEatingNote = noteEatingFace.GetComponent<noteCollision> ().isColliding;
+
+		if (collider.tag == "Cube" && isFist && isFaceEatingNote) {
+			helpfulText.text = "PUNCH";
+			isPunching = true;
+
 		}
+		
 	}
 
 	void OnTriggerExit(Collider collider)
 	{
+		/*if (OVRInput.Get (OVRInput.Axis1D.PrimaryHandTrigger, Controller) >= 0.5f && OVRInput.Get (OVRInput.Axis1D.PrimaryIndexTrigger, Controller) >= 0.5f) {
+			isPunching = true;
+		} else {
+			isPunching = false;
+		}*/
+
+		helpfulText.text = "KICK";
 		// RotatableCube = GameObject.FindGameObjectWithTag("Rotatable");
 		emptyTouchingPos = OVRInput.GetLocalControllerPosition (Controller);
 		Vector3 diff = lastTouchingPos - emptyTouchingPos;
@@ -104,7 +127,7 @@ public class Hand : MonoBehaviour {
 			axisOne = -3;			axisTwo = 2;
 		}
 
-		if (!CubeScript.moving) {
+		if (!CubeScript.moving && isFist == false) {
 			if (CubeScript != null) {
 				if 		(Mathf.Sign (directionOne) == 1 && directionOne >= slapSensitivity) 	CubeScript.rotate (CubeCollider.attachedRigidbody, axisOne);
 				else if (Mathf.Sign (directionOne) == -1 && directionOne <= -slapSensitivity) 	CubeScript.rotate (CubeCollider.attachedRigidbody, -axisOne);
@@ -116,51 +139,27 @@ public class Hand : MonoBehaviour {
     }
 
 	void Update () {
-        /*
-		Ray raydirection = new Ray(transform.position, transform.forward);
-		Debug.DrawRay (transform.position, transform.forward, Color.black, 1);
-		RaycastHit hit;
-
-		if (Physics.Raycast(raydirection, out hit, 1000)) {
-			if (hit.collider.tag == "Back") {
-				print (" O WOW");
-				face = 1;
-					//hit.transform.gameObject.SendMessage("Activate", SendMessageOptions.DontRequireReceiver);
-				}
-			else if (hit.collider.tag == "Left") {
-				print (" O Left");
-				face = 2;
-				//hit.transform.gameObject.SendMessage("Activate", SendMessageOptions.DontRequireReceiver);
-			}
-			else if (hit.collider.tag == "right") {
-				print (" O Right");
-				face = 3;
-				//hit.transform.gameObject.SendMessage("Activate", SendMessageOptions.DontRequireReceiver);
-			}
-			else if (hit.collider.tag == "Top") {
-				print (" O Top");
-				face = 4;
-				//hit.transform.gameObject.SendMessage("Activate", SendMessageOptions.DontRequireReceiver);
-			}
-			else if (hit.collider.tag == "Bottom") {
-				print (" O Bottom");
-				face = 5;
-				//hit.transform.gameObject.SendMessage("Activate", SendMessageOptions.DontRequireReceiver);
-			}
-			else if (hit.collider.tag == "Front") {
-				print (" O Front");
-				face = 6;
-				//hit.transform.gameObject.SendMessage("Activate", SendMessageOptions.DontRequireReceiver);
-			}
-		}
-        */
-
-
 
 		timeSinceLastCall += Time.deltaTime;
+		//isPunching = false;
 		if(mHandState == State.HOLDING){
 		}
 
+		if (OVRInput.Get(OVRInput.Axis1D.PrimaryHandTrigger, Controller) >= 0.5f && OVRInput.Get(OVRInput.Axis1D.PrimaryIndexTrigger, Controller) >= 0.5f) {
+			if (Controller == OVRInput.Controller.RTouch) {
+				OVRHaptics.RightChannel.Mix (rHapticsClip);
+				transform.GetComponent<SphereCollider> ().center = new Vector3 (0.03f, -0.03f, -0.03f);
+
+			} else {
+				OVRHaptics.LeftChannel.Mix (lHapticsClip);
+				transform.GetComponent<SphereCollider> ().center = new Vector3 (-0.03f, -0.03f, -0.03f);
+			}
+			isFist = true;
+		} else {
+			transform.GetComponent<SphereCollider> ().center = new Vector3 (-0.01f, -0.02f, 0.03f);
+			isFist = false;
+		}
+	
 		switch (mHandState)
 		{
 		case State.TOUCHING:
