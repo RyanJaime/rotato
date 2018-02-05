@@ -61,8 +61,13 @@ public class Hand : MonoBehaviour {
 		CubeCollider = RotatableCube.GetComponent<Collider> ();
 
 		lHapticsClip = new OVRHapticsClip (lVibeClip);
-		rHapticsClip = new OVRHapticsClip (rVibeClip);
-	}
+        rHapticsClip = new OVRHapticsClip (rVibeClip);
+
+        noteEatingFace = GameObject.FindGameObjectWithTag("Right");
+        if (noteEatingFace != null && noteEatingFace.GetComponent<noteCollision>() != null) {
+            print("faceearting");
+            isFaceEatingNote = noteEatingFace.GetComponent<noteCollision>().isColliding; }
+    }
 
 	void OnTriggerEnter(Collider collider)
 	{
@@ -82,8 +87,8 @@ public class Hand : MonoBehaviour {
 		}	else if (collider.tag == "Bottom") { // check which face being collidered
 			helpfulText.text = "Bottom";
 		}*/
-		noteEatingFace = GameObject.FindGameObjectWithTag ("Right");
-		isFaceEatingNote = noteEatingFace.GetComponent<noteCollision> ().isColliding;
+		//noteEatingFace = GameObject.FindGameObjectWithTag ("Right");
+		//isFaceEatingNote = noteEatingFace.GetComponent<noteCollision> ().isColliding;
 
 		if (collider.tag == "Cube" && isFist && isFaceEatingNote) {
 			helpfulText.text = "PUNCH";
@@ -126,9 +131,8 @@ public class Hand : MonoBehaviour {
 			directionOne = diff.x;	directionTwo = diff.z;
 			axisOne = -3;			axisTwo = 2;
 		}
-
-		if (!CubeScript.moving && isFist == false) {
-			if (CubeScript != null) {
+        if (CubeScript != null){
+            if (!CubeScript.moving && isFist == false) {
 				if 		(Mathf.Sign (directionOne) == 1 && directionOne >= slapSensitivity) 	CubeScript.rotate (CubeCollider.attachedRigidbody, axisOne);
 				else if (Mathf.Sign (directionOne) == -1 && directionOne <= -slapSensitivity) 	CubeScript.rotate (CubeCollider.attachedRigidbody, -axisOne);
 				else if (Mathf.Sign (directionTwo) == 1 && directionTwo >= slapSensitivity) 	CubeScript.rotate (CubeCollider.attachedRigidbody, axisTwo);
@@ -140,14 +144,21 @@ public class Hand : MonoBehaviour {
 
 	void Update () {
 
-		timeSinceLastCall += Time.deltaTime;
+        if (noteEatingFace.GetComponent<noteCollision>() == null)
+        {
+            print("farghluh");
+            isFaceEatingNote = noteEatingFace.GetComponent<noteCollision>().isColliding;
+        }
+
+
+        timeSinceLastCall += Time.deltaTime;
 		//isPunching = false;
 		if(mHandState == State.HOLDING){
 		}
 
 		if (OVRInput.Get(OVRInput.Axis1D.PrimaryHandTrigger, Controller) >= 0.5f && OVRInput.Get(OVRInput.Axis1D.PrimaryIndexTrigger, Controller) >= 0.5f) {
 			if (Controller == OVRInput.Controller.RTouch) {
-				if (noteEatingFace.GetComponent<noteCollision> ().rVibrate) {
+				if (noteEatingFace != null && noteEatingFace.GetComponent < noteCollision >() != null && noteEatingFace.GetComponent<noteCollision> ().rVibrate) {
 					OVRHaptics.RightChannel.Mix (rHapticsClip);
 					noteEatingFace.GetComponent<noteCollision> ().rVibrate = false;
 				}

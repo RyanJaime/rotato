@@ -46,9 +46,14 @@ public class menuHand : MonoBehaviour {
 	public AudioClip lVibeClip;
 	public AudioClip rVibeClip;
 
+    private Text scoreText;
+
 	void Start ()
 	{
-		if (AttachPoint == null) {
+        scoreText = GameObject.Find("scoreText").GetComponent<Text>();
+        scoreText.enabled = false;
+
+        if (AttachPoint == null) {
 			AttachPoint = GetComponent<Rigidbody>();
 		}
 		RotatableCube = GameObject.FindGameObjectWithTag("Rotatable");
@@ -126,7 +131,13 @@ public class menuHand : MonoBehaviour {
 		}
 
 		if (isPunching) {
+            //transform.
+            transform.gameObject.GetComponent<Hand>().enabled = true;
 			SceneManager.LoadScene("main");
+            
+            //scoreText = GameObject.FindGameObjectsWithTag("scoreTextTag");
+            scoreText.enabled = true;
+            this.enabled = false;
 		}
 	}
 
