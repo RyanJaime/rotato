@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Hand : MonoBehaviour {
+public class rHand : MonoBehaviour {
 
 	public enum State
 	{
@@ -26,7 +26,7 @@ public class Hand : MonoBehaviour {
 	private float previousVelocityx = 0f;
 	private float currentVelocityx = 0f;
 
-    private float slapSensitivity = 0.05f;
+	private float slapSensitivity = 0.05f;
 
 	private Vector3 lastTouchingPos;
 	private Vector3 emptyTouchingPos;
@@ -90,7 +90,7 @@ public class Hand : MonoBehaviour {
 			isPunching = true;
 
 		}
-		
+
 	}
 
 	void OnTriggerExit(Collider collider)
@@ -136,7 +136,7 @@ public class Hand : MonoBehaviour {
 			}
 		}
 
-    }
+	}
 
 	void Update () {
 
@@ -149,29 +149,20 @@ public class Hand : MonoBehaviour {
 			if (Controller == OVRInput.Controller.RTouch) {
 				if (noteEatingFace.GetComponent<noteCollision> ().rVibrate) {
 					OVRHaptics.RightChannel.Mix (rHapticsClip);
-					noteEatingFace.GetComponent<noteCollision> ().rVibrate = false
+					noteEatingFace.GetComponent<noteCollision> ().rVibrate = false;
 				}
-					
 				transform.GetComponent<SphereCollider> ().center = new Vector3 (0.03f, -0.03f, -0.03f);
-
-			} else {
-				if (noteEatingFace.GetComponent<noteCollision> ().lVibrate) {
-					OVRHaptics.LeftChannel.Mix (lHapticsClip);
-					noteEatingFace.GetComponent<noteCollision> ().lVibrate = false;
-				}
-
-				transform.GetComponent<SphereCollider> ().center = new Vector3 (-0.03f, -0.03f, -0.03f);
 			}
 			isFist = true;
 		} else {
 			transform.GetComponent<SphereCollider> ().center = new Vector3 (-0.01f, -0.02f, 0.03f);
 			isFist = false;
 		}
-	
+
 		switch (mHandState)
 		{
 		case State.TOUCHING:
-			
+
 			if (mTempJoint == null && OVRInput.Get(OVRInput.Axis1D.PrimaryHandTrigger, Controller) >= 0.5f)
 			{
 				mHeldObject.velocity = Vector3.zero;
