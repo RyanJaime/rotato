@@ -1,9 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class Hand : MonoBehaviour {
+public class menuHand : MonoBehaviour {
 
 	public enum State
 	{
@@ -16,8 +17,6 @@ public class Hand : MonoBehaviour {
 	public State mHandState = State.EMPTY;
 	public Rigidbody AttachPoint = null;
 	public bool IgnoreContactPoint = false;
-	private Rigidbody mHeldObject;
-	private FixedJoint mTempJoint;
 
 	private Vector3 motionTrack;
 	private Vector3 lastMotionTrack;
@@ -26,7 +25,7 @@ public class Hand : MonoBehaviour {
 	private float previousVelocityx = 0f;
 	private float currentVelocityx = 0f;
 
-    private float slapSensitivity = 0.05f;
+	private float slapSensitivity = 0.05f;
 
 	private Vector3 lastTouchingPos;
 	private Vector3 emptyTouchingPos;
@@ -40,11 +39,7 @@ public class Hand : MonoBehaviour {
 	public bool isPunching = false;
 	public bool isFist = false;
 
-	public GameObject noteEatingFace;
-	public bool isFaceEatingNote = false;
-
 	private Quaternion lastRotation, currentRotation;
-
 
 	OVRHapticsClip lHapticsClip;
 	OVRHapticsClip rHapticsClip;
@@ -66,43 +61,18 @@ public class Hand : MonoBehaviour {
 
 	void OnTriggerEnter(Collider collider)
 	{
-		//print ("////////////////////////////////");
 		lastTouchingPos = OVRInput.GetLocalControllerPosition(Controller);
 
-		/*if (collider.tag == "Back") { // check which face being collidered
-			helpfulText.text = "Back";
-		} else if (collider.tag == "Left") { // check which face being collidered
-			helpfulText.text = "Left";
-		}  else if (collider.tag == "Right") { // check which face being collidered
-			helpfulText.text = "Right";
-		}	else if (collider.tag == "Front") { // check which face being collidered
-			helpfulText.text = "Front";
-		}	else if (collider.tag == "Front") { // check which face being collidered
-			helpfulText.text = "Front";
-		}	else if (collider.tag == "Bottom") { // check which face being collidered
-			helpfulText.text = "Bottom";
-		}*/
-		noteEatingFace = GameObject.FindGameObjectWithTag ("Right");
-		isFaceEatingNote = noteEatingFace.GetComponent<noteCollision> ().isColliding;
-
-		if (collider.tag == "Cube" && isFist && isFaceEatingNote) {
+		if (collider.tag == "Cube" && isFist) {
 			helpfulText.text = "PUNCH";
 			isPunching = true;
-
 		}
-		
+
 	}
 
 	void OnTriggerExit(Collider collider)
 	{
-		/*if (OVRInput.Get (OVRInput.Axis1D.PrimaryHandTrigger, Controller) >= 0.5f && OVRInput.Get (OVRInput.Axis1D.PrimaryIndexTrigger, Controller) >= 0.5f) {
-			isPunching = true;
-		} else {
-			isPunching = false;
-		}*/
-
 		helpfulText.text = "KICK";
-		// RotatableCube = GameObject.FindGameObjectWithTag("Rotatable");
 		emptyTouchingPos = OVRInput.GetLocalControllerPosition (Controller);
 		Vector3 diff = lastTouchingPos - emptyTouchingPos;
 		float directionOne = 0f, directionTwo = 0f;
@@ -136,30 +106,17 @@ public class Hand : MonoBehaviour {
 			}
 		}
 
-    }
+	}
 
 	void Update () {
 
 		timeSinceLastCall += Time.deltaTime;
-		//isPunching = false;
-		if(mHandState == State.HOLDING){
-		}
 
 		if (OVRInput.Get(OVRInput.Axis1D.PrimaryHandTrigger, Controller) >= 0.5f && OVRInput.Get(OVRInput.Axis1D.PrimaryIndexTrigger, Controller) >= 0.5f) {
 			if (Controller == OVRInput.Controller.RTouch) {
-				if (noteEatingFace.GetComponent<noteCollision> ().rVibrate) {
-					OVRHaptics.RightChannel.Mix (rHapticsClip);
-					noteEatingFace.GetComponent<noteCollision> ().rVibrate = false;
-				}
-					
 				transform.GetComponent<SphereCollider> ().center = new Vector3 (0.03f, -0.03f, -0.03f);
 
 			} else {
-				if (noteEatingFace.GetComponent<noteCollision> ().lVibrate) {
-					OVRHaptics.LeftChannel.Mix (lHapticsClip);
-					noteEatingFace.GetComponent<noteCollision> ().lVibrate = false;
-				}
-
 				transform.GetComponent<SphereCollider> ().center = new Vector3 (-0.03f, -0.03f, -0.03f);
 			}
 			isFist = true;
@@ -167,31 +124,10 @@ public class Hand : MonoBehaviour {
 			transform.GetComponent<SphereCollider> ().center = new Vector3 (-0.01f, -0.02f, 0.03f);
 			isFist = false;
 		}
-	
-		switch (mHandState)
-		{
-		case State.TOUCHING:
-			
-			if (mTempJoint == null && OVRInput.Get(OVRInput.Axis1D.PrimaryHandTrigger, Controller) >= 0.5f)
-			{
-				mHeldObject.velocity = Vector3.zero;
-				//mTempJoint = mHeldObject.gameObject.AddComponent<FixedJoint>();
-				//mTempJoint.connectedBody = AttachPoint;
-				mHandState = State.HOLDING;
-			}
-			break;
-		case State.HOLDING:
-			break;
-		}
-		previousVelocityx = currentVelocityx;
-	}
 
-	private void throwObject()//should check parameters of rotation here to rotate cube
-	{
-		//mHeldObject.velocity = OVRInput.GetLocalControllerVelocity(Controller);	//for moving objects
-		print(OVRInput.GetLocalControllerVelocity(Controller));
-		/*mHeldObject.angularVelocity = GetAngularVelocity();
-		mHeldObject.maxAngularVelocity = mHeldObject.angularVelocity.magnitude;*/
+		if (isPunching) {
+			SceneManager.LoadScene("main");
+		}
 	}
 
 	private Vector3 GetAngularVelocity(){
