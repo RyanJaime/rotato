@@ -48,8 +48,16 @@ public class menuHand : MonoBehaviour {
 
     private Text scoreText;
 
-	void Start ()
+    private GameObject[] menuHands;
+    private bool isMenuHandScriptEnabledL;
+    private bool isMenuHandScriptEnabledR;
+
+    void Start ()
 	{
+        menuHands = GameObject.FindGameObjectsWithTag("Hand");
+        isMenuHandScriptEnabledL = menuHands[0].GetComponent<menuHand>();
+        isMenuHandScriptEnabledR = menuHands[1].GetComponent<menuHand>();
+
         scoreText = GameObject.Find("scoreText").GetComponent<Text>();
         scoreText.enabled = false;
 
@@ -69,7 +77,7 @@ public class menuHand : MonoBehaviour {
 		lastTouchingPos = OVRInput.GetLocalControllerPosition(Controller);
 
 		if (collider.tag == "Cube" && isFist) {
-			helpfulText.text = "PUNCH";
+			//helpfulText.text = "PUNCH";
 			isPunching = true;
 		}
 
@@ -77,7 +85,7 @@ public class menuHand : MonoBehaviour {
 
 	void OnTriggerExit(Collider collider)
 	{
-		helpfulText.text = "KICK";
+		//helpfulText.text = "KICK";
 		emptyTouchingPos = OVRInput.GetLocalControllerPosition (Controller);
 		Vector3 diff = lastTouchingPos - emptyTouchingPos;
 		float directionOne = 0f, directionTwo = 0f;
@@ -102,7 +110,7 @@ public class menuHand : MonoBehaviour {
 			axisOne = -3;			axisTwo = 2;
 		}
 
-		if (!CubeScript.moving && isFist == false) {
+		if (!CubeScript.moving && isFist == false && OVRInput.Get(OVRInput.Axis1D.PrimaryIndexTrigger, Controller) >= 0.5f) {
 			if (CubeScript != null) {
 				if 		(Mathf.Sign (directionOne) == 1 && directionOne >= slapSensitivity) 	CubeScript.rotate (CubeCollider.attachedRigidbody, axisOne);
 				else if (Mathf.Sign (directionOne) == -1 && directionOne <= -slapSensitivity) 	CubeScript.rotate (CubeCollider.attachedRigidbody, -axisOne);
@@ -117,7 +125,8 @@ public class menuHand : MonoBehaviour {
 
 		timeSinceLastCall += Time.deltaTime;
 
-		if (OVRInput.Get(OVRInput.Axis1D.PrimaryHandTrigger, Controller) >= 0.5f && OVRInput.Get(OVRInput.Axis1D.PrimaryIndexTrigger, Controller) >= 0.5f) {
+		if (OVRInput.Get(OVRInput.Axis1D.PrimaryHandTrigger, Controller) >= 0.5f) //&& OVRInput.Get(OVRInput.Axis1D.PrimaryIndexTrigger, Controller) >= 0.5f)
+                {
 			if (Controller == OVRInput.Controller.RTouch) {
 				transform.GetComponent<SphereCollider> ().center = new Vector3 (0.03f, -0.03f, -0.03f);
 
@@ -126,23 +135,47 @@ public class menuHand : MonoBehaviour {
 			}
 			isFist = true;
 		} else {
-			transform.GetComponent<SphereCollider> ().center = new Vector3 (-0.01f, -0.02f, 0.03f);
+			transform.GetComponent<SphereCollider> ().center = new Vector3 (-0.01f, -0.04f, 0f);
 			isFist = false;
 		}
 
-		if (isPunching) {
+		if (isPunching || Input.GetKey(KeyCode.K)) {
             //transform.
-            transform.gameObject.GetComponent<Hand>().enabled = true;
-			SceneManager.LoadScene("main");
+            helpfulText.enabled = false;
+            
+            //transform.gameObject.GetComponent<Hand>().enabled = true;
+            StartCoroutine(LoadLevelAfterDelay(3));
+            //SceneManager.LoadScene("main");
             
             //scoreText = GameObject.FindGameObjectsWithTag("scoreTextTag");
             scoreText.enabled = true;
-            this.enabled = false;
-		}
+            if (isMenuHandScriptEnabledL || isMenuHandScriptEnabledR)
+            {
+                menuHands[0].GetComponent<menuHand>().isFist = true; // temp bugfix
+                menuHands[1].GetComponent<menuHand>().isFist = true;
+                menuHands[0].GetComponent<Hand>().enabled = true;
+                menuHands[1].GetComponent<Hand>().enabled = true;
+                menuHands[0].GetComponent<menuHand>().enabled = false;
+                menuHands[1].GetComponent<menuHand>().enabled = false;
+            }
+            helpfulText.enabled = false;
+            //this.enabled = false;
+        }
 	}
 
 	private Vector3 GetAngularVelocity(){
 		Quaternion deltaRotation = currentRotation * Quaternion.Inverse (lastRotation);
 		return new Vector3 (Mathf.DeltaAngle (0, deltaRotation.eulerAngles.x), Mathf.DeltaAngle (0, deltaRotation.eulerAngles.y), Mathf.DeltaAngle (0, deltaRotation.eulerAngles.z));
 	}
+    private IEnumerator LoadLevelAfterDelay(int seconds)
+    {
+        helpfulText.text = "LOADING";
+        yield return new WaitForSeconds(seconds);
+        SceneManager.LoadScene("main");
+        helpfulText.text = "done";
+        //helpfulText.enabled = false;
+
+    }
 }
+
+

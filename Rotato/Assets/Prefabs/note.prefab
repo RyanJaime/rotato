@@ -96,6 +96,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 0.02
+  colliding: 0
   moveState: 1
 --- !u!135 &135869916401727478
 SphereCollider:
