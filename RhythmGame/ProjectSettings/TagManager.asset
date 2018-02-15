@@ -16,6 +16,8 @@ TagManager:
   - Hand
   - scoreTextTag
   - RightPhysical
+  - scorePedestal
+  - singleHex
   layers:
   - Default
   - TransparentFX

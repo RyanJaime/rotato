@@ -45,6 +45,7 @@ public class Hand : MonoBehaviour {
 	OVRHapticsClip rHapticsClip;
 	public AudioClip lVibeClip;
 	public AudioClip rVibeClip;
+    private GameObject scorePedestal;
     private GameObject[] handsArray;
 
     //public ParticleSystem blackSquiggle;
@@ -52,6 +53,7 @@ public class Hand : MonoBehaviour {
     void Start ()
 	{
         handsArray = GameObject.FindGameObjectsWithTag("Hand");
+        scorePedestal = GameObject.FindGameObjectWithTag("scorePedestal");
 
         isPunching = isFist = levelStarted = false;
 		if (AttachPoint == null) {
@@ -142,6 +144,16 @@ public class Hand : MonoBehaviour {
     }
 
 	void FixedUpdate () {
+        if (Input.GetKey(KeyCode.J))
+        {
+            levelStarted = true;
+            StartCoroutine(LoadLevelAfterDelay(0));
+        }
+        if (OVRInput.Get(OVRInput.Button.One))
+        {
+            //scorePedestal.GetComponent<extendScorePedestal>().elevateFunction();
+            scorePedestal.GetComponent<extendScorePedestal>().startLerping = true;
+        }
         isFaceEatingNote = noteEatingFace.GetComponent<noteCollision>().isColliding; // true when note colliding with cube's hitbox
 
 		if (OVRInput.Get(OVRInput.Axis1D.PrimaryHandTrigger, Controller) >= 0.5f ) // Neutral? Punch? Swipe?
@@ -185,7 +197,7 @@ public class Hand : MonoBehaviour {
     {
         helpfulText.text = "LOADING";
         yield return new WaitForSeconds(seconds);
-        SceneManager.LoadScene("main");
+        SceneManager.LoadScene("jonWick");
         //helpfulText.text = "done";
         helpfulText.enabled = false;
     }
