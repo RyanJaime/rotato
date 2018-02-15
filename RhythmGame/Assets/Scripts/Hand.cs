@@ -29,7 +29,10 @@ public class Hand : MonoBehaviour {
 
 	private GameObject RotatableCube;
 	private Rotate CubeScript;
-	private Collider CubeCollider;
+    private GameObject songList;
+    private rotateSongList SongListScript;
+
+    private Collider CubeCollider;
 
 	public Text helpfulText, scoreText;
 
@@ -61,6 +64,9 @@ public class Hand : MonoBehaviour {
 		}
 		RotatableCube = GameObject.FindGameObjectWithTag("Rotatable");
 		CubeScript = RotatableCube.GetComponent<Rotate> ();
+        songList = GameObject.FindGameObjectWithTag("songList");
+        SongListScript = songList.GetComponent<rotateSongList>();
+
 		CubeCollider = RotatableCube.GetComponent<Collider> ();
 
 		lHapticsClip = new OVRHapticsClip (lVibeClip);
@@ -135,15 +141,84 @@ public class Hand : MonoBehaviour {
 		}
         if (CubeScript != null){
             if (!CubeScript.moving && isFist == false && OVRInput.Get(OVRInput.Axis1D.PrimaryIndexTrigger, Controller) >= 0.5f) {
-				if 		(Mathf.Sign (directionOne) == 1 && directionOne >= slapSensitivity) 	CubeScript.rotate (CubeCollider.attachedRigidbody, axisOne);
+				if 		(Mathf.Sign (directionOne) == 1 && directionOne >= slapSensitivity) 	SongListScript.rotate (CubeCollider.attachedRigidbody, axisOne);
 				else if (Mathf.Sign (directionOne) == -1 && directionOne <= -slapSensitivity) 	CubeScript.rotate (CubeCollider.attachedRigidbody, -axisOne);
 				else if (Mathf.Sign (directionTwo) == 1 && directionTwo >= slapSensitivity) 	CubeScript.rotate (CubeCollider.attachedRigidbody, axisTwo);
 				else if (Mathf.Sign (directionTwo) == -1 && directionTwo <= -slapSensitivity) 	CubeScript.rotate (CubeCollider.attachedRigidbody, -axisTwo);
-			}
+                if (levelStarted == false) {
+                    if (Mathf.Sign(directionOne) == 1 && directionOne >= slapSensitivity) SongListScript.rotate(CubeCollider.attachedRigidbody, axisOne);
+                    else if (Mathf.Sign(directionOne) == -1 && directionOne <= -slapSensitivity) SongListScript.rotate(CubeCollider.attachedRigidbody, -axisOne);
+                    else if (Mathf.Sign(directionTwo) == 1 && directionTwo >= slapSensitivity) SongListScript.rotate(CubeCollider.attachedRigidbody, axisTwo);
+                    else if (Mathf.Sign(directionTwo) == -1 && directionTwo <= -slapSensitivity) SongListScript.rotate(CubeCollider.attachedRigidbody, -axisTwo);
+                }
+            }
 		}
+    }
+    void debugRotations(string face, Vector3 diff)  // similar to OnTriggerExit, to test using keyboard inputs.
+    {
+        //emptyTouchingPos = OVRInput.GetLocalControllerPosition(Controller);
+        //Vector3 diff = new Vector3(1, 1, 1);// lastTouchingPos - emptyTouchingPos;
+        float directionOne = 0f, directionTwo = 0f;
+        int axisOne = 0, axisTwo = 0;
+        if (face == "Front")
+        {
+            directionOne = diff.x; directionTwo = diff.y;
+            axisOne = -1; axisTwo = -2;
+        }
+        else if (face == "Back")
+        {
+            directionOne = diff.x; directionTwo = diff.y;
+            axisOne = 1; axisTwo = 2;
+        }
+        else if (face == "Left")
+        {
+            directionOne = diff.z; directionTwo = diff.y;
+            axisOne = 1; axisTwo = 3;
+        }
+        else if (face == "Right")
+        {
+            directionOne = diff.z; directionTwo = diff.y;
+            axisOne = -1; axisTwo = -3;
+        }
+        else if (face == "Top")
+        {
+            directionOne = diff.x; directionTwo = diff.z;
+            axisOne = 3; axisTwo = -2;
+        }
+        else if (face == "Bottom")
+        {
+            directionOne = diff.x; directionTwo = diff.z;
+            axisOne = -3; axisTwo = 2;
+        }
+        if (CubeScript != null)
+        {
+            //if (!CubeScript.moving && isFist == false && OVRInput.Get(OVRInput.Axis1D.PrimaryIndexTrigger, Controller) >= 0.5f)
+            //{
+                if (Mathf.Sign(directionOne) == 1 && directionOne >= slapSensitivity) SongListScript.rotate(CubeCollider.attachedRigidbody, axisOne);
+                else if (Mathf.Sign(directionOne) == -1 && directionOne <= -slapSensitivity) CubeScript.rotate(CubeCollider.attachedRigidbody, -axisOne);
+                else if (Mathf.Sign(directionTwo) == 1 && directionTwo >= slapSensitivity) CubeScript.rotate(CubeCollider.attachedRigidbody, axisTwo);
+                else if (Mathf.Sign(directionTwo) == -1 && directionTwo <= -slapSensitivity) CubeScript.rotate(CubeCollider.attachedRigidbody, -axisTwo);
+                if (levelStarted == false)
+                {
+                    if (Mathf.Sign(directionOne) == 1 && directionOne >= slapSensitivity) SongListScript.rotate(CubeCollider.attachedRigidbody, axisOne);
+                    else if (Mathf.Sign(directionOne) == -1 && directionOne <= -slapSensitivity) SongListScript.rotate(CubeCollider.attachedRigidbody, -axisOne);
+                    else if (Mathf.Sign(directionTwo) == 1 && directionTwo >= slapSensitivity) SongListScript.rotate(CubeCollider.attachedRigidbody, axisTwo);
+                    else if (Mathf.Sign(directionTwo) == -1 && directionTwo <= -slapSensitivity) SongListScript.rotate(CubeCollider.attachedRigidbody, -axisTwo);
+                }
+            //}
+        }
     }
 
 	void FixedUpdate () {
+        if (Input.GetKey(KeyCode.W))
+        {
+            debugRotations("Front", new Vector3(1,0,0));
+        }
+        if (Input.GetKey(KeyCode.S))
+        {
+            debugRotations("Front", new Vector3(-1,-1,-1));
+        }
+
         if (Input.GetKey(KeyCode.J))
         {
             levelStarted = true;
