@@ -4511,8 +4511,6 @@ MonoBehaviour:
   scoreText4: {fileID: 410224894}
   comboText: {fileID: 178917543}
   blackSquiggle: {fileID: 1760205928}
-  leftSpeakerParticle: {fileID: 1562009550}
-  rightSpeakerParticle: {fileID: 1296380522}
 --- !u!1 &387995905
 GameObject:
   m_ObjectHideFlags: 0
@@ -13680,8 +13678,6 @@ MonoBehaviour:
   scoreText4: {fileID: 410224894}
   comboText: {fileID: 178917543}
   blackSquiggle: {fileID: 1760205928}
-  leftSpeakerParticle: {fileID: 0}
-  rightSpeakerParticle: {fileID: 0}
 --- !u!114 &1331902534
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -22189,6 +22185,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f81a6e98c35e6f4293cf15d5b0c9e33, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  MIDIbytesFile: {fileID: 0}
   timerText: {fileID: 1436961227}
   anotherBigOneForDebugging: 
 --- !u!1 &1933537515
