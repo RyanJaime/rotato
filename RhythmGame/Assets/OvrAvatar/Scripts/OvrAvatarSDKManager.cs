@@ -14,6 +14,11 @@ public class OvrAvatarSDKManager : MonoBehaviour {
     private Dictionary<UInt64, HashSet<assetLoadedCallback>> assetLoadedCallbacks;
     private Dictionary<UInt64, OvrAvatarAsset> assetCache;
 
+    void Awake()
+    {
+        DontDestroyOnLoad(transform.gameObject);
+    }
+
     public static OvrAvatarSDKManager Instance
     {
         get

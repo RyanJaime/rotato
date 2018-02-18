@@ -19,6 +19,11 @@ TagManager:
   - scorePedestal
   - singleHex
   - songList
+  - Irodori
+  - LEDSpirals
+  - songSelectorHitbox
+  - localAvatar
+  - destroyMissedNotes
   layers:
   - Default
   - TransparentFX

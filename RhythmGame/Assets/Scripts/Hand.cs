@@ -32,6 +32,9 @@ public class Hand : MonoBehaviour {
     private GameObject songList;
     private rotateSongList SongListScript;
 
+    private GameObject songListSelector;
+    private selectedSong selectedSongInstance;
+
     private Collider CubeCollider;
 
 	public Text helpfulText, scoreText;
@@ -57,6 +60,8 @@ public class Hand : MonoBehaviour {
 	{
         handsArray = GameObject.FindGameObjectsWithTag("Hand");
         scorePedestal = GameObject.FindGameObjectWithTag("scorePedestal");
+        songListSelector = GameObject.FindGameObjectWithTag("songSelectorHitbox");
+        selectedSongInstance = songListSelector.GetComponent<selectedSong>();
 
         isPunching = isFist = levelStarted = false;
 		if (AttachPoint == null) {
@@ -78,7 +83,7 @@ public class Hand : MonoBehaviour {
         noteEatingFace = GameObject.FindGameObjectWithTag("Rotatable");
         //noteEatingFace =  GameObject.FindGameObjectWithTag("Cube"); // was Right
         if (noteEatingFace != null && noteEatingFace.GetComponent<noteCollision>() != null) {
-            print("faceearting");
+            //print("faceearting");
             isFaceEatingNote = noteEatingFace.GetComponent<noteCollision>().isColliding; }
     }
 
@@ -98,7 +103,7 @@ public class Hand : MonoBehaviour {
         }
         if (collider.tag == "Cube" && isFist)// && isFaceEatingNote)
         {
-            //helpfulText.text = "PUNCH";
+            helpfulText.text = "PUNCH";
             isPunching = true;
         }
         if ((!levelStarted && collider.tag == "Cube" && isFist) || Input.GetKey(KeyCode.K))
@@ -106,7 +111,30 @@ public class Hand : MonoBehaviour {
             if (!handsArray[0].GetComponent<Hand>().levelStarted && !handsArray[1].GetComponent<Hand>().levelStarted)
             {
                 levelStarted = true;
-                StartCoroutine(LoadLevelAfterDelay(2));
+                switch (selectedSongInstance.currentSelectedSong)
+                {
+                    //print("in SWITCH " + selectedSongInstance.currentSelectedSong);
+                    case "LEDSpirals":
+                        print("in SWITCH " + selectedSongInstance.currentSelectedSong);
+                        helpfulText.text = "LOADING";
+                        SceneManager.LoadScene("jonWick");
+                        helpfulText.enabled = false;
+                        // set byte file for MIDIparser to load
+                        break;
+                    case "Irodori":
+                        print("in SWITCH " + selectedSongInstance.currentSelectedSong);
+                        helpfulText.text = "LOADING";
+                        SceneManager.LoadScene("main");
+                        helpfulText.enabled = false;
+                        // set byte file for MIDIparser to load
+                        break;
+                    default:
+                        print("in SWITCH " + selectedSongInstance.currentSelectedSong);
+                        break;
+                }
+                //selectedSongInstance.currentSelectedSong
+                //StartCoroutine(LoadLevelAfterDelay(2));
+
                 //helpfulText.enabled = true;
                 //scoreText.enabled = true;
             }
@@ -141,7 +169,7 @@ public class Hand : MonoBehaviour {
 		}
         if (CubeScript != null){
             if (!CubeScript.moving && isFist == false && OVRInput.Get(OVRInput.Axis1D.PrimaryIndexTrigger, Controller) >= 0.5f) {
-				if 		(Mathf.Sign (directionOne) == 1 && directionOne >= slapSensitivity) 	SongListScript.rotate (CubeCollider.attachedRigidbody, axisOne);
+				if 		(Mathf.Sign (directionOne) == 1 && directionOne >= slapSensitivity)     CubeScript.rotate (CubeCollider.attachedRigidbody, axisOne);
 				else if (Mathf.Sign (directionOne) == -1 && directionOne <= -slapSensitivity) 	CubeScript.rotate (CubeCollider.attachedRigidbody, -axisOne);
 				else if (Mathf.Sign (directionTwo) == 1 && directionTwo >= slapSensitivity) 	CubeScript.rotate (CubeCollider.attachedRigidbody, axisTwo);
 				else if (Mathf.Sign (directionTwo) == -1 && directionTwo <= -slapSensitivity) 	CubeScript.rotate (CubeCollider.attachedRigidbody, -axisTwo);
@@ -194,7 +222,7 @@ public class Hand : MonoBehaviour {
         {
             //if (!CubeScript.moving && isFist == false && OVRInput.Get(OVRInput.Axis1D.PrimaryIndexTrigger, Controller) >= 0.5f)
             //{
-                if (Mathf.Sign(directionOne) == 1 && directionOne >= slapSensitivity) SongListScript.rotate(CubeCollider.attachedRigidbody, axisOne);
+                if (Mathf.Sign(directionOne) == 1 && directionOne >= slapSensitivity) CubeScript.rotate(CubeCollider.attachedRigidbody, axisOne);
                 else if (Mathf.Sign(directionOne) == -1 && directionOne <= -slapSensitivity) CubeScript.rotate(CubeCollider.attachedRigidbody, -axisOne);
                 else if (Mathf.Sign(directionTwo) == 1 && directionTwo >= slapSensitivity) CubeScript.rotate(CubeCollider.attachedRigidbody, axisTwo);
                 else if (Mathf.Sign(directionTwo) == -1 && directionTwo <= -slapSensitivity) CubeScript.rotate(CubeCollider.attachedRigidbody, -axisTwo);
@@ -222,9 +250,9 @@ public class Hand : MonoBehaviour {
         if (Input.GetKey(KeyCode.J))
         {
             levelStarted = true;
-            StartCoroutine(LoadLevelAfterDelay(0));
+            SceneManager.LoadScene("jonWick");
         }
-        if (OVRInput.Get(OVRInput.Button.One))
+        if (scorePedestal != null && OVRInput.Get(OVRInput.Button.One))
         {
             //scorePedestal.GetComponent<extendScorePedestal>().elevateFunction();
             scorePedestal.GetComponent<extendScorePedestal>().startLerping = true;

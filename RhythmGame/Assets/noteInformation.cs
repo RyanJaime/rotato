@@ -19,5 +19,20 @@ public class noteInformation : MonoBehaviour {
         {
             hasGoneThruCorrectFace = true;
         }
+        else if (face.tag == "destroyMissedNotes")// && hasGoneThruCorrectFace == false)
+        {
+            print(face.tag);
+            StartCoroutine(destroyAfterSeconds(1));
+            //play particle. change color.
+            //this.gameObject.GetComponent<Renderer>().enabled = false;
+            //Destroy(gameObject);
+        }
     }
+
+    private IEnumerator destroyAfterSeconds(int seconds)
+    {
+        yield return new WaitForSeconds(seconds);
+        Destroy(gameObject);
+    }
+
 }
