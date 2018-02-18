@@ -7,6 +7,7 @@ using System;
 
 public class MIDIparse : MonoBehaviour
 {
+    public TextAsset MIDIbytesFile;
     public Text timerText;
     private float startTime;
     private float timeTotal = 0.0f;
@@ -53,13 +54,20 @@ public class MIDIparse : MonoBehaviour
     // might want to check if it's actually a .bytes file before attempting to load?
     
     GameObject clone;
-    
-    // Use this for initialization
-    void Start()
+
+    IEnumerator syncMIDI()
+    {
+        //print(Time.time);
+        yield return new WaitForSeconds(10);
+    }
+
+        // Use this for initialization
+        void Start()
     {
         startTime = Time.time;
-       
-        TextAsset bytesFile = Resources.Load("5notes") as TextAsset;
+
+        //TextAsset bytesFile = Resources.Load("5notes") as TextAsset;
+        TextAsset bytesFile = MIDIbytesFile;
         byte[] data_array = bytesFile.bytes; // Put it into a byte array
 
         print("Attempting to Parse MIDI!");
@@ -70,24 +78,24 @@ public class MIDIparse : MonoBehaviour
             Debug.Log(String.Format("no 'MThd', so it's not a MIDI file\n" +
                                     "{0:x}{1:x} {2:x}{3:x}", data_array[0], data_array[1], data_array[2], data_array[3]));
         }
-
+        //StartCoroutine(syncMIDI());
         getBytes(data_array);
 
         float t = Time.time - startTime;
         float secondsPerFixedUpdate = .02f; //Time.deltaTime;
         //print("FixedUpdate time : " + Time.deltaTime);
-        float TPQ = 960; // default for REAPER MIDI is 960 // 150
-        float BPM = 135; // default for REAPER MIDI is 120
+        float TPQ = 118.5f; // default for REAPER MIDI is 960 // 150
+        float BPM = 120; // default for REAPER MIDI is 120
         //float ms = (60000 / (BPM * TPQ));
         float s = (60 / (BPM * TPQ)); //ms / 1000;
 
         //print("MS:        " + ms);   // 0.5208333 ms for 1 tick. 1000 ms = 1 s
-        //print("S:        " + s);   // 0.0005208333 s for 1 tick. 1000 ms = 1 s
+        print("S:        " + s);   // 0.0005208333 s for 1 tick. 1000 ms = 1 s
         // about 1920 ticks per second
         // 26.041665 FixedUpdates for 1 tick
         //string secondsString = t.ToString("F6"); // (t % 60)
         //string msString = (ms % 60).ToString();
-        ticksPerFixedUpdate = secondsPerFixedUpdate / s;
+        ticksPerFixedUpdate = 4.739f;//secondsPerFixedUpdate / s;
         print("ticksPerFixedUpdate: " + ticksPerFixedUpdate);
         fuckingPrint();
         //foreach(byte item in rByteList) { print("right list" + item);}
