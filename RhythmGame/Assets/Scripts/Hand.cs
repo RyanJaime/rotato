@@ -31,6 +31,7 @@ public class Hand : MonoBehaviour {
 	private Rotate CubeScript;
     private GameObject songList;
     private rotateSongList SongListScript;
+    
 
     private GameObject songListSelector;
     private selectedSong selectedSongInstance;
@@ -40,9 +41,10 @@ public class Hand : MonoBehaviour {
 	public Text helpfulText, scoreText;
 
 	public bool isPunching, isFist, levelStarted;
-   
-	public GameObject noteEatingFace;
-	public bool isFaceEatingNote = false;
+
+    public GameObject noteEatingFace, backButton;
+    private backToMenu backButtonScript;
+    public bool isFaceEatingNote = false;
 
 	private Quaternion lastRotation, currentRotation;
 
@@ -77,6 +79,9 @@ public class Hand : MonoBehaviour {
 		lHapticsClip = new OVRHapticsClip (lVibeClip);
         rHapticsClip = new OVRHapticsClip (rVibeClip);
 
+        backButton = GameObject.FindGameObjectWithTag("backPlane");
+        //backButtonScript = backButton.GetComponent<backToMenu>();
+
         //scoreText = GameObject.Find("scoreText").GetComponent<Text>();
         //scoreText.enabled = false;
 
@@ -97,6 +102,11 @@ public class Hand : MonoBehaviour {
          * else if (collider.tag == "Front")    { helpfulText.text = "Front"; }
          * else if (collider.tag == "Front")    { helpfulText.text = "Front"; }	
          * else if (collider.tag == "Bottom")   { helpfulText.text = "Bottom"; }    */
+        if (collider.tag ==  "end")
+        {
+            print("QUIT");
+            Application.Quit();
+        }
         if (collider.tag == "Cube")
         {
             //print("tag: " + collider.tag + " isFist: " + isFist + " isFaceEatingNote: " + isFaceEatingNote);
@@ -119,6 +129,7 @@ public class Hand : MonoBehaviour {
                         helpfulText.text = "LOADING";
                         SceneManager.LoadScene("jonWick");
                         helpfulText.enabled = false;
+                        backButtonScript.setAudio();
                         // set byte file for MIDIparser to load
                         break;
                     case "Irodori":
@@ -126,7 +137,11 @@ public class Hand : MonoBehaviour {
                         helpfulText.text = "LOADING";
                         SceneManager.LoadScene("main");
                         helpfulText.enabled = false;
+                        backButtonScript.setAudio();
                         // set byte file for MIDIparser to load
+                        break;
+                    case "Quit":
+                        Application.Quit();
                         break;
                     default:
                         print("in SWITCH " + selectedSongInstance.currentSelectedSong);
@@ -255,6 +270,7 @@ public class Hand : MonoBehaviour {
         if (scorePedestal != null && OVRInput.Get(OVRInput.Button.One))
         {
             //scorePedestal.GetComponent<extendScorePedestal>().elevateFunction();
+            GameObject.FindGameObjectWithTag("pedestal").SetActive(true);
             scorePedestal.GetComponent<extendScorePedestal>().startLerping = true;
         }
         isFaceEatingNote = noteEatingFace.GetComponent<noteCollision>().isColliding; // true when note colliding with cube's hitbox

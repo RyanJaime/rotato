@@ -5,9 +5,12 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
+  - enabled: 0
+    path: Assets/Scenes/load.unity
+    guid: b34352114024a574788bc0723414b36c
   - enabled: 1
     path: Assets/Scenes/title.unity
-    guid: b34352114024a574788bc0723414b36c
+    guid: 3e41920861855f54c8c1fd58b8ab9ce7
   - enabled: 1
     path: Assets/Scenes/main.unity
     guid: 8c6ebd0daccf43b45ba6ca772fc6a8ba
@@ -17,3 +20,6 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/jonWick.unity
     guid: bbcbc23eb1578ed45bea21869378fde5
+  - enabled: 1
+    path: Assets/Scenes/end.unity
+    guid: c33a8913e71530b409942670dea50af5

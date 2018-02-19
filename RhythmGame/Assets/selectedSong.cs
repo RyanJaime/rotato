@@ -30,6 +30,9 @@ public class selectedSong : MonoBehaviour {
                 currentSelectedSong = "Irodori";
                 // set byte file for MIDIparser to load
                 break;
+            case "Quit":
+                currentSelectedSong = "Quit";
+                break;
             default:
                 break;
         }

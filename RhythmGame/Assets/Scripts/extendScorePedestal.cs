@@ -14,16 +14,18 @@ public class extendScorePedestal : MonoBehaviour {
     Vector3 startPos;
     Vector3 endPos;
 
-    private GameObject singleHex;
+    private GameObject singleHex, backPlane;
     public TextMesh pedestalScore;
     GameObject noteCollisionObject;
 
     protected void Start()
     {
         singleHex = GameObject.FindGameObjectWithTag("singleHex");
+        backPlane = GameObject.FindGameObjectWithTag("backPlane");
+        backPlane.gameObject.SetActive(false);
         singleHex.gameObject.SetActive(false);
-        noteCollisionObject = GameObject.FindGameObjectWithTag("Rotatable");
         pedestalScore.gameObject.SetActive(false);
+        noteCollisionObject = GameObject.FindGameObjectWithTag("Rotatable");
         startPos = transform.localScale;
         endPos = transform.localScale + new Vector3(0, 0, 40f);
         currentLerpTime = 0;
@@ -44,9 +46,10 @@ public class extendScorePedestal : MonoBehaviour {
             
             transform.localScale = Vector3.Lerp(startPos, endPos, perc);
             if (perc >= 1)
-            {    
-                pedestalScore.gameObject.SetActive(true);
-                pedestalScore.text = noteCollisionObject.GetComponent<noteCollision>().getPlayerScore().ToString();
+            {
+                backPlane.gameObject.SetActive(true);
+                //pedestalScore.gameObject.SetActive(true);
+                //pedestalScore.text = noteCollisionObject.GetComponent<noteCollision>().getPlayerScore().ToString();
             }
         }
     }

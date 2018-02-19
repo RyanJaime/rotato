@@ -4,6 +4,7 @@ Assets/Scenes/title.unity
 Assets/Scenes/main.unity
 Assets/Scenes/scoreScreen.unity
 Assets/Scenes/jonWick.unity
+Assets/Scenes/end.unity
 SceneListEnd?
 3fe08763d136608a8801e6becca60439 Assembly-CSharp.dll:.spawner
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.OvrAvatarBody
@@ -96,6 +97,7 @@ f61c0793411f10cf5fbfa1473fef5ef2 UnityEngine.UI.dll:UnityEngine.UI.ToggleGroup
 1b8c02d0aa82fbf036a2b9b2d713eec3 UnityEngine.UI.dll:UnityEngine.UI.VerticalLayoutGroup
 ee3204a1e0e2cf67e04e01c8c820d5b4 Assembly-CSharp.dll:.OVRPlayerController
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.OvrAvatarSDKManager
+05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.rotateFloorParticles
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.OvrAvatarBase
 5e1701ec82b76ba237999557f0b0e744 Assembly-CSharp.dll:.OvrAvatarLocalDriver
 05524b8f659e7bfe5756d1335fec24ba UnityEngine.Timeline.dll:UnityEngine.Timeline.ActivationPlayableAsset
@@ -128,9 +130,9 @@ e9bdabf9265d758d56f01bb188916fa8 UnityEngine.Networking.dll:UnityEngine.Networki
 9de3a22eca9aefadba2d10d5987cefe3 UnityEngine.SpatialTracking.dll:UnityEngine.SpatialTracking.TrackedPoseDriver
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.songInfo
 6f2f0979accbc3efafde0c413424f808 Assembly-CSharp.dll:.OVRTrackedRemote
-0b1917ee08a90ae9207726dfe0a7423c Assembly-CSharp.dll:.Hand
+be0be0404d77d322888d751a40456ead Assembly-CSharp.dll:.Hand
 75afd4f55d5de156385b561957b508d8 Assembly-CSharp.dll:.OVRMousePointer
-7441411140a0a3fbf882fba9eeb518f4 Assembly-CSharp.dll:.createSpawners
+1365638536edb2dadde597a4b062e3de Assembly-CSharp.dll:.createSpawners
 8eaa1ea3fe248a4ad6181cb89780ccc4 Assembly-CSharp.dll:.Rotate
 e7de64a2f47c8a0046023c2b0a8f83bb Assembly-CSharp.dll:.OvrAvatarSettings
 322cb40e1e282f28af980cbef7922a90 UnityEngine.Analytics.dll:UnityEngine.Analytics.AnalyticsEventTracker
@@ -146,7 +148,7 @@ c2275a8bfbb9f9942cad75ecdfded41d UnityEngine.HoloLens.dll:UnityEngine.XR.WSA.Spa
 a97206b1f732dc0aa9b23a14352f4399 Assembly-CSharp.dll:.OVRPlatformMenu
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.DontDestroy
 13a6a1a75679b3c0344b1b6c7e825e34 Assembly-CSharp.dll:.OvrAvatarComponent
-971196e1a10bdf26f1cc7f7c29bfd113 Assembly-CSharp.dll:.noteCollision
+b0425d2353c2cc28ad91f346520a0d44 Assembly-CSharp.dll:.noteCollision
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.OvrAvatarTouchController
 7de0afb2b17c38fcb9ae00e0f8424658 Assembly-CSharp.dll:.menuHand
 0f1ce9ab76b350392e54ea4fc47b4dde Assembly-CSharp.dll:.OVRRTOverlayConnector
@@ -180,7 +182,7 @@ e9bdabf9265d758d56f01bb188916fa8 UnityEngine.Networking.dll:UnityEngine.Networki
 73843688b51256aed059f049c540bca8 UnityEngine.Networking.dll:UnityEngine.Networking.NetworkTransformChild
 528ea1fd7c01796fc60c4e2f172ea229 UnityEngine.Networking.dll:UnityEngine.Networking.NetworkTransformVisualizer
 2f347b936b329db7c0c68dadbd709981 Assembly-CSharp.dll:.rotateSongList
-7078e896502d6cdf9bd9638e26a02b75 Assembly-CSharp.dll:.MIDIparse
+ed28d6936b281d128afcd96862843182 Assembly-CSharp.dll:.MIDIparse
 7b7745d8d1ab7fe13f98bfffbf52c18d Assembly-CSharp.dll:.OVRWaitCursor
 1e8fa1709a7d238b587520423fa03a93 Assembly-CSharp.dll:.OvrAvatar
 5e1701ec82b76ba237999557f0b0e744 Assembly-CSharp.dll:.OvrAvatarRemoteDriver
@@ -193,6 +195,7 @@ ccd25ccca39fd5159c3471f7762e1ced Assembly-CSharp.dll:.OVRChromaticAberration
 96d0fbde9fd209878a0a291f82c9bcdd UnityEngine.TestRunner.dll:UnityEngine.TestTools.TestRunner.PlaymodeTestsController
 64eb32cc721b1cc68a91ed57461e188c UnityEngine.TestRunner.dll:UnityEngine.TestTools.TestRunner.Callbacks.RemoteTestResultSender
 e0f7ffd5d5c2abe4b2e16569a21163da UnityEngine.GoogleAudioSpatializer.dll:UnityEngine.Experimental.Audio.Google.GvrAudioRoom
+91f4f24e484286226f46e33c3719226f Assembly-CSharp.dll:.backToMenu
 e0f7ffd5d5c2abe4b2e16569a21163da UnityEngine.GoogleAudioSpatializer.dll:UnityEngine.Experimental.Audio.Google.GvrAudioRoom
 6de6070780d7efa822923e689e617f4c Assembly-CSharp.dll:.OvrAvatarMeshInstance
 bc68edb0af574bf79f9550ead8ebae5c UnityEngine.HoloLens.dll:UnityEngine.Audio.AudioSpatializerMicrosoft
@@ -211,3 +214,5 @@ a8ed45ab553b07236625df6cc6ac449c Assembly-CSharp.dll:.OVRLint
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.OvrAvatarHand
 f8b7b37cadaba9b078f91d50799ec1e7 Assembly-CSharp.dll:.noteInformation
 2124af75d6b3afb90d3c8471b98e9f78 Assembly-CSharp.dll:.lookRot
+142c21ca7a12c438fd47ad901cf911e1 Assembly-CSharp.dll:.goToTitleScene
+05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.quitGame

@@ -24,6 +24,11 @@ TagManager:
   - songSelectorHitbox
   - localAvatar
   - destroyMissedNotes
+  - Quit
+  - backPlane
+  - audioSource
+  - pedestal
+  - end
   layers:
   - Default
   - TransparentFX

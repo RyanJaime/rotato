@@ -22,9 +22,9 @@ public class noteInformation : MonoBehaviour {
         else if (face.tag == "destroyMissedNotes")// && hasGoneThruCorrectFace == false)
         {
             print(face.tag);
-            //StartCoroutine(destroyAfterSeconds(1));
+            StartCoroutine(destroyAfterSeconds(1));
             //play particle. change color.
-            //this.gameObject.GetComponent<Renderer>().enabled = false;
+            this.gameObject.GetComponent<Renderer>().enabled = false;
             //Destroy(gameObject);
         }
     }
