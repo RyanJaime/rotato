@@ -29,6 +29,7 @@ TagManager:
   - audioSource
   - pedestal
   - end
+  - amp
   layers:
   - Default
   - TransparentFX

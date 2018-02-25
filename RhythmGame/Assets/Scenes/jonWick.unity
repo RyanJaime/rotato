@@ -1631,25 +1631,13 @@ GameObject:
   m_Component:
   - component: {fileID: 121928372}
   - component: {fileID: 121928371}
-  - component: {fileID: 121928370}
   m_Layer: 0
   m_Name: Point light
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!114 &121928370
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 121928369}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7dc2cf75f18e95b4da8e650c2141504e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_IsActive: 1
 --- !u!108 &121928371
 Light:
   m_ObjectHideFlags: 0
@@ -5055,6 +5043,7 @@ MonoBehaviour:
   blackSquiggle: {fileID: 0}
   ampNoiseLines: {fileID: 0}
   noteExplosion: {fileID: 0}
+  combo: 0
 --- !u!65 &390163896
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -7763,25 +7752,13 @@ GameObject:
   m_Component:
   - component: {fileID: 495939805}
   - component: {fileID: 495939804}
-  - component: {fileID: 495939803}
   m_Layer: 0
   m_Name: Directional Light
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!114 &495939803
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 495939802}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7dc2cf75f18e95b4da8e650c2141504e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_IsActive: 1
 --- !u!108 &495939804
 Light:
   m_ObjectHideFlags: 0

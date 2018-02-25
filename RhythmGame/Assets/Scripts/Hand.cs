@@ -33,8 +33,8 @@ public class Hand : MonoBehaviour {
     private rotateSongList SongListScript;
     
 
-    private GameObject songListSelector;
-    private selectedSong selectedSongInstance;
+    public GameObject songListSelector;
+    public selectedSong selectedSongInstance;
 
     private Collider CubeCollider;
 
@@ -62,9 +62,9 @@ public class Hand : MonoBehaviour {
 	{
         handsArray = GameObject.FindGameObjectsWithTag("Hand");
         scorePedestal = GameObject.FindGameObjectWithTag("scorePedestal");
-        songListSelector = GameObject.FindGameObjectWithTag("songSelectorHitbox");
-        selectedSongInstance = songListSelector.GetComponent<selectedSong>();
-
+        //songListSelector = GameObject.FindGameObjectWithTag("songSelectorHitbox");
+        //selectedSongInstance = songListSelector.GetComponent<selectedSong>();
+        //SongListScript = songList.GetComponent<rotateSongList>();
         isPunching = isFist = levelStarted = false;
 		if (AttachPoint == null) {
 			AttachPoint = GetComponent<Rigidbody>();
@@ -72,7 +72,7 @@ public class Hand : MonoBehaviour {
 		RotatableCube = GameObject.FindGameObjectWithTag("Rotatable");
 		CubeScript = RotatableCube.GetComponent<Rotate> ();
         songList = GameObject.FindGameObjectWithTag("songList");
-        SongListScript = songList.GetComponent<rotateSongList>();
+        
 
 		CubeCollider = RotatableCube.GetComponent<Collider> ();
 
@@ -120,68 +120,77 @@ public class Hand : MonoBehaviour {
         { // first time you punch the cube will start the level
             if (!handsArray[0].GetComponent<Hand>().levelStarted && !handsArray[1].GetComponent<Hand>().levelStarted)
             {
-                levelStarted = true;
-                switch (selectedSongInstance.currentSelectedSong)
-                {
-                    //print("in SWITCH " + selectedSongInstance.currentSelectedSong);
-                    case "LEDSpirals":
-                        print("in SWITCH " + selectedSongInstance.currentSelectedSong);
-                        helpfulText.text = "LOADING";
-                        SceneManager.LoadScene("jonWick");
-                        helpfulText.enabled = false;
-                        backButtonScript.setAudio();
-                        // set byte file for MIDIparser to load
-                        break;
-                    case "Irodori":
-                        print("in SWITCH " + selectedSongInstance.currentSelectedSong);
-                        helpfulText.text = "LOADING";
-                        SceneManager.LoadScene("main");
-                        helpfulText.enabled = false;
-                        backButtonScript.setAudio();
-                        // set byte file for MIDIparser to load
-                        break;
-                    case "Quit":
-                        Application.Quit();
-                        break;
-                    default:
-                        print("in SWITCH " + selectedSongInstance.currentSelectedSong);
-                        break;
+                if(selectedSongInstance != null) { 
+                    levelStarted = true;
+                    switch (selectedSongInstance.currentSelectedSong)
+                    {
+                        //print("in SWITCH " + selectedSongInstance.currentSelectedSong);
+                        case "LEDSpirals":
+                            print("in SWITCH " + selectedSongInstance.currentSelectedSong);
+                            helpfulText.text = "LOADING";
+                            noteEatingFace.GetComponent<noteCollision>().playerScore = 0;
+                            SceneManager.LoadScene("jonWick");
+                            helpfulText.enabled = false;
+                            //backButtonScript.setAudio();
+                            // set byte file for MIDIparser to load
+                            break;
+                        case "Irodori":
+                            print("in SWITCH " + selectedSongInstance.currentSelectedSong);
+                            helpfulText.text = "LOADING";
+                            noteEatingFace.GetComponent<noteCollision>().playerScore = 0;
+                            SceneManager.LoadScene("main");
+                            helpfulText.enabled = false;
+                            //backButtonScript.setAudio();
+                            // set byte file for MIDIparser to load
+                            break;
+                        case "Quit":
+                            Application.Quit();
+                            break;
+                        default:
+                            print("in SWITCH " + selectedSongInstance.currentSelectedSong);
+                            break;
+                    }
                 }
-                //selectedSongInstance.currentSelectedSong
-                //StartCoroutine(LoadLevelAfterDelay(2));
-
-                //helpfulText.enabled = true;
-                //scoreText.enabled = true;
             }
         }
 	}
 
 	void OnTriggerExit(Collider collider) // Rotates Cube WRT global axes when one of the six frozen (position & rotation) faces are slapped.
 	{
-		//helpfulText.text = "KICK";
+		helpfulText.text = "KICK";
 		emptyTouchingPos = OVRInput.GetLocalControllerPosition (Controller);
 		Vector3 diff = lastTouchingPos - emptyTouchingPos;
 		float directionOne = 0f, directionTwo = 0f;
 		int axisOne = 0, axisTwo = 0;
 		if (collider.tag == "Front") {
+            //print("front rot");
 			directionOne = diff.x; 	directionTwo = diff.y;
 			axisOne = -1; 			axisTwo = -2;
 		} else if (collider.tag == "Back") {
-			directionOne = diff.x; 	directionTwo = diff.y;
+            //print("back rot");
+            directionOne = diff.x; 	directionTwo = diff.y;
 			axisOne = 1; 			axisTwo = 2;
 		} else if (collider.tag == "Left") {
-			directionOne = diff.z; 	directionTwo = diff.y;
+            //print("ledft rot");
+            directionOne = diff.z; 	directionTwo = diff.y;
 			axisOne = 1; 			axisTwo = 3;
 		} else if (collider.tag == "Right") {
-			directionOne = diff.z;	directionTwo = diff.y;
+            //print("right rot");
+            directionOne = diff.z;	directionTwo = diff.y;
 			axisOne = -1;			axisTwo = -3;
 		} else if (collider.tag == "Top") {
-			directionOne = diff.x;	directionTwo = diff.z;
+            //print("top tier rot");
+            directionOne = diff.x;	directionTwo = diff.z;
 			axisOne = 3;			axisTwo = -2;
 		} else if (collider.tag == "Bottom"){
-			directionOne = diff.x;	directionTwo = diff.z;
+            //print("bottomom rot");
+            directionOne = diff.x;	directionTwo = diff.z;
 			axisOne = -3;			axisTwo = 2;
 		}
+        if (CubeScript == null)
+        {
+            print("cUBEsCRIPT nULL, LUL");
+        }
         if (CubeScript != null){
             if (!CubeScript.moving && isFist == false && OVRInput.Get(OVRInput.Axis1D.PrimaryIndexTrigger, Controller) >= 0.5f) {
 				if 		(Mathf.Sign (directionOne) == 1 && directionOne >= slapSensitivity)     CubeScript.rotate (CubeCollider.attachedRigidbody, axisOne);
@@ -251,22 +260,54 @@ public class Hand : MonoBehaviour {
             //}
         }
     }
+    public void setSongSelectorNull()
+    {
+        print("setSongSelectorNull function called");
+        songList = null;
+        songListSelector = null;
+        songList = null;
+        songListSelector = null;
+
+    }
+
+
+    public void setSongSelectorAfterSceneChange()
+    {
+        songList = GameObject.FindGameObjectWithTag("songList");
+        songListSelector = GameObject.FindGameObjectWithTag("songSelectorHitbox");
+        if (songList != null) { SongListScript = songList.GetComponent<rotateSongList>(); }
+        if (songListSelector != null) { selectedSongInstance = songListSelector.GetComponent<selectedSong>(); }
+    }
 
 	void FixedUpdate () {
         if (Input.GetKey(KeyCode.W))
         {
+            print("rotate!");
             debugRotations("Front", new Vector3(1,0,0));
         }
         if (Input.GetKey(KeyCode.S))
         {
             debugRotations("Front", new Vector3(-1,-1,-1));
         }
-
+        if (Input.GetKey(KeyCode.T))
+        {
+            print("T pressed, going to title scene");
+            SceneManager.LoadScene("title");
+        }
         if (Input.GetKey(KeyCode.J))
         {
             levelStarted = true;
             SceneManager.LoadScene("jonWick");
+            songListSelector = GameObject.FindGameObjectWithTag("songSelectorHitbox");
+            selectedSongInstance = songListSelector.GetComponent<selectedSong>();
+            SongListScript = songList.GetComponent<rotateSongList>();
         }
+        if (songList == null || songListSelector == null || selectedSongInstance == null || SongListScript == null)
+        {
+            print("SETTING SONG SELECTOR STUFF");
+            setSongSelectorAfterSceneChange();
+        }
+
         if (scorePedestal != null && OVRInput.Get(OVRInput.Button.One))
         {
             //scorePedestal.GetComponent<extendScorePedestal>().elevateFunction();
@@ -317,7 +358,7 @@ public class Hand : MonoBehaviour {
         helpfulText.text = "LOADING";
         yield return new WaitForSeconds(seconds);
         SceneManager.LoadScene("jonWick");
-        //helpfulText.text = "done";
+        // helpfulText.text = "done";
         helpfulText.enabled = false;
     }
 }

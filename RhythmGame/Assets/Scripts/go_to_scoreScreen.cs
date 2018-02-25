@@ -16,6 +16,10 @@ public class go_to_scoreScreen : MonoBehaviour {
     // Update is called once per frame
     void Update()
     {
+        if(Input.GetKey(KeyCode.M))
+        {
+            audioSource.Stop();
+        }
         if (!audioSource.isPlaying)
         {
             //audioSource.clip = otherClip;
