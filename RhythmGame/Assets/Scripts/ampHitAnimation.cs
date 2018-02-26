@@ -17,6 +17,5 @@ public class ampHitAnimation : MonoBehaviour {
         {
             shapeKeyControllerScriptInstance.callScaleCoroutine(shapeKeyArr[i]);
         }
-		
 	}
 }

@@ -57,7 +57,7 @@ public class spawner : MonoBehaviour
 
 
 
-    public void createObstacle(int ticks)
+    public void createObstacle()//int ticks)
     {
         Vector3 spawnPosition = new Vector3(0, 0, 0);
         clone = Instantiate(obstacle, spawnPosition = transform.TransformPoint(spawnPosX, 0, spawnPosZ), obstacleRotation);
