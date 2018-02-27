@@ -9139,7 +9139,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f81a6e98c35e6f4293cf15d5b0c9e33, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MIDIbytesFile: {fileID: 4900000, guid: 4df3cb992cc559743b35a22582a1bfc5, type: 3}
+  MIDIbytesFile: {fileID: 4900000, guid: fd8fa8d42f973ac4eaf2a198ee0d27cf, type: 3}
   timerText: {fileID: 0}
   anotherBigOneForDebugging: 
 --- !u!114 &582429827
@@ -22459,7 +22459,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 158226, guid: 84c8b8609f9bb434eaf5248f17ff1293, type: 2}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 84c8b8609f9bb434eaf5248f17ff1293, type: 2}

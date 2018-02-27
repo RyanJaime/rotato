@@ -11,13 +11,14 @@ public class MIDIparse : MonoBehaviour
     public Text timerText;
     private float startTime;
     private float timeTotal = 0.0f;
-    float ticksTotal = -100;
+    float ticksTotal = 0; // -100;
+    float tickCountThatIncrementsForEachTickValueAndDoesNotResetUnlikeTickTotal06ButIDontWantToNameItThis;
+    float songSyncTicks;
     private int index = 0;
     private int checkerIndex = 23; // 23 is the number of bytes into the file where note events start in the MTrk 0;
 
     private int giantIndex = 0;
     bool noteOnKeepSpawning = false;
-
 
     bool noteOn00 = false; bool firstSpawnofNoteOn00 = false;
     bool noteOn01 = false; bool firstSpawnofNoteOn01 = false;
@@ -33,8 +34,8 @@ public class MIDIparse : MonoBehaviour
     // Each int array will hold
     // (deltaTime in dec, On / Off, what note)
     public List<int[]> oneGiantByteList = new List<int[]>();
-
     public List<int> anotherBigOneForDebugging = new List<int>();
+    private List<float[]> noteOnMidiTS = new List<float[]>(); // Time Stamps and lane for noteOn events IS MIDI an acronym?
 
     //string hexString = "";
     // Load the .bytes (MIDI) file as TextAsset
@@ -67,8 +68,9 @@ public class MIDIparse : MonoBehaviour
         //print("FixedUpdate time : " + Time.deltaTime);
         float TPQ = 120.0f; // default for REAPER MIDI is 960 // 118.5
         float BPM = 120; // default for REAPER MIDI is 120
-        float ms = (60000 / (BPM * TPQ));
+        //float ms = (60000 / (BPM * TPQ));
         float s = (60 / (BPM * TPQ)); //ms / 1000;
+        //print("s ");
         //print("MS:        " + ms);   // 0.5208333 ms for 1 tick. 1000 ms = 1 s
         //print("S:        " + s);   // 0.0005208333 s for 1 tick. 1000 ms = 1 s
         // about 1920 ticks per second
@@ -122,7 +124,6 @@ public class MIDIparse : MonoBehaviour
             }
         }
 
-        
         int tickLengthOfObstacle = 1;
         //int numSyncedNotes2 = 1;
         for (int i = 0; i < oneGiantByteList.Count; i++)
@@ -141,7 +142,6 @@ public class MIDIparse : MonoBehaviour
                         break;
                     }
                 }
-                //print("TICKLEGNTHTHTH : " + tickLengthOfObstacle);
                 int[] localIntArray = new int[3];
                 localIntArray = oneGiantByteList[i];
                 //localIntArray[3] = tickLengthOfObstacle;
@@ -195,29 +195,31 @@ public class MIDIparse : MonoBehaviour
         print(listToString);
     }
 
-    void FixedUpdate() // update every 0.02 ms
+    float timePassed = 0f;
+    void FixedUpdate() // update every 0.02 s
     {
-        //timerText.text = secondsString;
-
-        //print("ticksPerFixedUpdate: " + ticksPerFixedUpdate); // 38.4 with default REAPER TPQ and BPM
-
+        //print("deltaTime per update " + Time.deltaTime);
+        timePassed += Time.deltaTime;
+        print("total time: " + timePassed);
+        // timerText.text = secondsString;
+        // print("ticksPerFixedUpdate: " + ticksPerFixedUpdate); // 38.4 with default REAPER TPQ and BPM
         // function checks next event's delta time
         // when current ticks has reached that delta time, it turns note on.
         // bool is set to note on. bool tells function not to check again until next event's delta time has been reached.
 
         // check if ticksTotal >= any spawner's next delta time
 
-        // delta time, isnoteon, lane, length, #synced
+        // delta time, isnoteon, lane.
 
         // check if next note is spawning at the same time, if it is, call function again
 
+        // It'll never get here unless ticksTotal is initialized as a negative number.
         if (ticksTotal < 0)
         {
             ticksTotal += ticksPerFixedUpdate;
-            /////print("ticksTotal after " + ticksTotal);
+            print("ticksTotal after 0000000000000000000000000000 " + ticksTotal);
             return;
         }
-
         //int numSyncedNotes = 1;
         //bool stop = false;
 
@@ -253,18 +255,22 @@ public class MIDIparse : MonoBehaviour
        // for (int i = 0; i < oneGiantByteList[giantIndex][4]; i++)
         //{
             //DateTime before = DateTime.Now;
-            ////spawnornot(oneGiantByteList[giantIndex][4]);
-            spawnornot(1);
+            //spawnornot(oneGiantByteList[giantIndex][4]);
+            spawnornot();
+            //print("ticksTotal: " + ticksTotal);
             //DateTime after = DateTime.Now;
             //TimeSpan duration = after.Subtract(before);
             //print("How long function took in s: " + duration.Milliseconds);
-        //}
-        ///////////////////////////////print("ticksTotal after " + ticksTotal);
+            //}
+            ///////////////////////////////print("ticksTotal after " + ticksTotal);
     }
 
-    public void spawnornot(int localNumSyncedNotes)
+    // We want this function to accumulate timestamps for when to call createObstacle.
+    // Another function will call createObstacle after making sure it syncs with music timestamps.
+    // PROBLEM: Update is incrementing one more than it should before spawning, consistently. We probably should fix that. PROBLEM
+    // could just subtract 4.8 from songSyncTicks
+    public void spawnornot()
     {
-        
         if (giantIndex < oneGiantByteList.Count)
         {
             int[] localIntArray = oneGiantByteList[giantIndex];
@@ -273,26 +279,24 @@ public class MIDIparse : MonoBehaviour
             {
                 if (localIntArray[1] == 1) // if it's a noteOn event
                 {
-                    //print("spawning note of ticklength: " + localIntArray[3]);
-                    //createSpawners.spawnerList[localIntArray[2]].GetComponent<spawner>().createObstacle(localIntArray[3]);
-                    for (int i=0; i < localNumSyncedNotes; i++)
-                    {
-                        print("Note ON in lane: " + oneGiantByteList[giantIndex + i][2]);// + " at ticks: " + oneGiantByteList[giantIndex + i][3]);
-                        createSpawners.spawnerList[oneGiantByteList[giantIndex + i][2]].GetComponent<spawner>().createObstacle();//oneGiantByteList[giantIndex + i][3]);
-                    }
+                    float[] temp = new float[2] { songSyncTicks, oneGiantByteList[giantIndex][2] }; // time, lane
+                    print("float[] Time:" + temp[0] + " Lane: " + temp[1]);
+                    noteOnMidiTS.Add(temp);
+                    //print("Note ON in lane: " + oneGiantByteList[giantIndex][2]);
+                    createSpawners.spawnerList[oneGiantByteList[giantIndex][2]].GetComponent<spawner>().createObstacle(); //spawn note
                 }
                 giantIndex++;
                 ticksTotal = 0;
                 // do note on or off and reset ticks
             }
-            else { ticksTotal += ticksPerFixedUpdate; }
+            else { ticksTotal += ticksPerFixedUpdate; songSyncTicks += ticksPerFixedUpdate; }
         }   
     }
 
     public int calculateContinuationBit(List<byte> deltaTimes) {
         // Continuation bit stuff on delta times
-        //print("byte > x80");
-        //Debug.Log(String.Format("hex and dec " + "{0:x}  {0:d}", rByteList[index]));
+        // print("byte > x80");
+        // Debug.Log(String.Format("hex and dec " + "{0:x}  {0:d}", rByteList[index]));
         var result = Convert.ToString(deltaTimes[index], 2); // convert to binary 
         byte trunkated8 = (byte)(deltaTimes[index] - 0x80);
         byte[] LHSbyteArray = new byte[1] { trunkated8 };
