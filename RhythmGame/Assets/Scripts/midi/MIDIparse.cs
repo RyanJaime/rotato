@@ -53,7 +53,7 @@ public class MIDIParse : MonoBehaviour
     {
         //levelSong.Stop(); //levelSong.Play();
         //TextAsset bytesFile = Resources.Load("5notes") as TextAsset;
-        startDSP = AudioSettings.dspTime -2.3;
+        startDSP = AudioSettings.dspTime -2.3; // THIS -2.3 IS HARDCODED FOR WHEN SPAWNERS ARE 25UNITS AWAY!
         prevTime = (float) startDSP;
         currTime = 0f;
         print("startDSP: " + startDSP);
