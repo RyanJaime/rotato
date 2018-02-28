@@ -5,10 +5,11 @@ using System.Collections.Generic;
 using System.IO;
 using System;
 
-public class MIDIparse : MonoBehaviour
+public class MIDIParse : MonoBehaviour
 {
     public TextAsset MIDIbytesFile;
     public Text timerText;
+    public AudioSource levelSong;
     private float startTime;
     private float timeTotal = 0.0f;
     float ticksTotal = 0; // -100;
@@ -43,12 +44,19 @@ public class MIDIparse : MonoBehaviour
     
     GameObject clone;
 
+    public double startDSP;
+    private float prevTime;
+    private float currTime;
+
     // Use this for initialization
     void Start()
     {
-        startTime = Time.time;
-
+        //levelSong.Stop(); //levelSong.Play();
         //TextAsset bytesFile = Resources.Load("5notes") as TextAsset;
+        startDSP = AudioSettings.dspTime -2.3;
+        prevTime = (float) startDSP;
+        currTime = 0f;
+        print("startDSP: " + startDSP);
         TextAsset bytesFile = MIDIbytesFile;
         byte[] data_array = bytesFile.bytes; // Put it into a byte array
 
@@ -200,7 +208,8 @@ public class MIDIparse : MonoBehaviour
     {
         //print("deltaTime per update " + Time.deltaTime);
         timePassed += Time.deltaTime;
-        print("total time: " + timePassed);
+        //totalDSP = AudioSettings.dspTime; // digital signal processor
+        //print("totalDSP time: " + totalDSP);
         // timerText.text = secondsString;
         // print("ticksPerFixedUpdate: " + ticksPerFixedUpdate); // 38.4 with default REAPER TPQ and BPM
         // function checks next event's delta time
@@ -274,9 +283,14 @@ public class MIDIparse : MonoBehaviour
         if (giantIndex < oneGiantByteList.Count)
         {
             int[] localIntArray = oneGiantByteList[giantIndex];
-
-            if (ticksTotal >= localIntArray[0])
+            currTime = (float) (prevTime + localIntArray[0] * (0.02f / 4.8));
+            print("deltaTime: " + localIntArray[0] + " in seconds: " + currTime);// (localIntArray[0] * (0.02f / 4.8)));//)))))))))))))))))))))))) banana collection xD
+            //print("Next note at time(in seconds relative to startDSP): " + (startDSP  + localIntArray[0] * (0.02f / 4.8)));
+            print("AudioSettings.dspTime: " + AudioSettings.dspTime + " >? " + currTime); // (startDSP + localIntArray[0] * (0.02f / 4.8)));
+            if(AudioSettings.dspTime > currTime)//(localIntArray[0] * (0.02f/4.8))) // 0.02sec per 4.8 ticks
+            //if (ticksTotal >= localIntArray[0]) // what we used before
             {
+                print("Y E S");
                 if (localIntArray[1] == 1) // if it's a noteOn event
                 {
                     float[] temp = new float[2] { songSyncTicks, oneGiantByteList[giantIndex][2] }; // time, lane
@@ -286,13 +300,14 @@ public class MIDIparse : MonoBehaviour
                     createSpawners.spawnerList[oneGiantByteList[giantIndex][2]].GetComponent<spawner>().createObstacle(); //spawn note
                 }
                 giantIndex++;
-                ticksTotal = 0;
+                //ticksTotal = 0;
+                prevTime = currTime;
                 // do note on or off and reset ticks
             }
-            else { ticksTotal += ticksPerFixedUpdate; songSyncTicks += ticksPerFixedUpdate; }
+            //else { ticksTotal += ticksPerFixedUpdate; songSyncTicks += ticksPerFixedUpdate; }
         }   
     }
-
+    
     public int calculateContinuationBit(List<byte> deltaTimes) {
         // Continuation bit stuff on delta times
         // print("byte > x80");

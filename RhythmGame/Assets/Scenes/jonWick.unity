@@ -5043,7 +5043,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &390163894
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9139,9 +9139,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f81a6e98c35e6f4293cf15d5b0c9e33, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MIDIbytesFile: {fileID: 4900000, guid: fd8fa8d42f973ac4eaf2a198ee0d27cf, type: 3}
+  MIDIbytesFile: {fileID: 4900000, guid: ad6ffbc02e7c9de4e9b92fb5599c8df0, type: 3}
   timerText: {fileID: 0}
+  levelSong: {fileID: 1349472715}
   anotherBigOneForDebugging: 
+  startDSP: 0
 --- !u!114 &582429827
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -39046,7 +39048,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2010187052
 Transform:
   m_ObjectHideFlags: 0
